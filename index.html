@@ -6,11 +6,11 @@
    <title>POC</title>
 </head>
 <body>
-   <div id="view" style="display: flex; flex-direction: row; align-items: flex-start;">
+   <div id="view" style="display: flex; flex-direction: row; align-items: flex-end;">
    </div>
 
    <script>
-      const data = [
+      let data = [
 {"repoFullName": "bingmann/sound-of-sorting", "stargazersCount": 771, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/2604907?v=4"},
 {"repoFullName": "ForeignGods/Sorting-Algorithms-Blender", "stargazersCount": 637, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/78089013?v=4"},
 {"repoFullName": "clementmihailescu/Sorting-Visualizer", "stargazersCount": 583, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/20826081?v=4"},
@@ -1032,6 +1032,8 @@
 {"repoFullName": "nealarch01/SortingAlgoVisualizer", "stargazersCount": 1, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/73256760?v=4"},
 {"repoFullName": "Suyashbansod71/SortingAlgoVisualizer", "stargazersCount": 1, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/77398556?v=4"}
 ]
+   // truncate list to 200
+   data = data.slice(0, 100);
    randomize(data);
 
    console.log("hello world")
@@ -1042,7 +1044,7 @@
       div.style.display = 'flex';
       div.style.flexDirection = 'column';
       div.style.alignItems = 'center';
-      div.style.marginLeft = '-5px';
+      div.style.marginLeft = '-9px';
       div.style.borderRadius = '5px';
       div.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;';
       div.style.backgroundColor = 'white';
@@ -1057,7 +1059,7 @@
       profile.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;'
 
       const starBar = document.createElement('div');
-      starBar.style.height = `${Math.log(repo.stargazersCount)*100-50}px`;
+      starBar.style.height = `${Math.log(repo.stargazersCount)*100}px`;
       starBar.style.width = '2px';
       starBar.style.backgroundColor = `red`;
 
