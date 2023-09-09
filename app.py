@@ -14,7 +14,7 @@ print ("[")
 count = 0
 for repo in repositories:
     count += 1
-    print(f'{{"repoFullName": "{repo.full_name}", "stargazersCount": {repo.stargazers_count}}},')
+    print(f'{{"repoFullName": "{repo.full_name}", "stargazersCount": {repo.stargazers_count}, "ownerAvatarUrl": "{repo.owner.avatar_url}"}},')
     if count % 900 == 0:
         # Github API has a rate limit of 30 search requests per minute
         # there are 30 repositories per page
