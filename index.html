@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>POC</title>
+   <link rel="stylesheet" href="index.css">
+   <script src="https://cdn.tailwindcss.com"></script>
+   <script src="language-colors.js"></script>
+   <script src="original-data.js"></script>
+</head>
+<body class="bg-gray-950 flex justify-center">
+
+   <div class="bg-gray-950 rounded-lg sm:p-6 mt-8 inline-flex flex-col items-stretch">
+      <div id="repository-view" class="sm:pl-12 pr-0.5 mb-2 flex justify-start lg:justify-end h-52 items-start break-all sm:break-normal">
+
+      </div>
+      <div class="flex justify-center items-center">
+         <div class="w-6 mr-8 hidden sm:block">
+            <div class="origin-top-left translate-y-32 -rotate-90 pr-12 whitespace-nowrap">
+               <span class="text-gray-50">Number of stars </span>
+               <svg class="inline w-5"  fill="var(--yellow-300)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="m12.672.668 3.059 6.197 6.838.993a.75.75 0 0 1 .416 1.28l-4.948 4.823 1.168 6.812a.75.75 0 0 1-1.088.79L12 18.347l-6.116 3.216a.75.75 0 0 1-1.088-.791l1.168-6.811-4.948-4.823a.749.749 0 0 1 .416-1.279l6.838-.994L11.327.668a.75.75 0 0 1 1.345 0Z"/></svg>
+            </div>
+         </div>
+   
+         <div>
+            <div>
+               <div id="view" style="display: flex; flex-direction: row; align-items: flex-end;">
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="mt-8 sm:pl-12">
+         <button type="button" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Sort</button>
+   
+      </div>
+   </div>
+
+   <script>
+   const MAX_DESCRIPTION_LENGTH = 100;
+
+   let data = [];
+   let mouseX = 0;
+   let mouseY = 0;
+
+   let pointers = [];
+   let divs = [];
+   let currentPointer = null;
+   let activePointer = false;
+   let minStarCount = Infinity;
+   let maxStarCount = 0;
+   const graphHeight = 350;
+
+   document.onmousemove = ({ clientX, clientY }) => {
+      mouseX = clientX;
+      mouseY = clientY;
+   };
+
+   reset();
+   function reset() {
+      const previousData = data;
+      data = resizeDataWithWidth();
+      if (previousData.length !== data.length) {
+         // original data is sorted by stars, so we just need to get the first and last
+         // elements to get the min and max star counts
+         minStarCount = data[data.length - 1].stargazersCount;
+         maxStarCount = data[0].stargazersCount;
+         currentPointer = null;
+         activePointer = false;
+         divs = []
+         pointers = []
+         randomize(data);
+         render();
+         selectRepository(0);
+      }
+   }
+
+   window.addEventListener('resize', reset)
+   
+   function resizeDataWithWidth() {
+      const size = getScreenSize()
+      switch (size) {
+         case 'sm':
+            return originalData.slice(0, 25)
+            break;
+         case 'md':
+            return originalData.slice(0, 35)
+            break;
+         case 'lg':
+            return originalData.slice(0, 50)
+            break; 
+         case 'xl':
+            return originalData.slice(0, 75)
+            break;
+         case '2xl':
+            return originalData.slice(0, 100);
+            break;
+      }
+   }
+
+   function render() {
+      const view = document.getElementById("view");
+      view.replaceChildren();
+      for (let i = 0; i < data.length; i++) {
+         const repo = data[i];
+         const div = document.createElement('div');
+         div.style.display = 'flex';
+         div.style.flexDirection = 'column';
+         div.style.alignItems = 'center';
+         div.style.marginLeft = '-9px';
+         div.style.borderRadius = '5px';
+         div.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;';
+         div.style.backgroundColor = 'transparent';
+         div.classList.add('repo-item')
+         divs.push(div)
+         // div.href = `https://github.com/${repo.repoFullName}` 
+
+         const profile = document.createElement('img');
+         profile.src = repo.ownerAvatarUrl;
+         profile.loading = 'lazy'
+         profile.style.height='20px'
+         profile.style.width='20px'
+         profile.style.objectFit='cover'
+         profile.style.borderRadius='50%'
+         profile.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;'
+
+         const starBar = document.createElement('div');
+         // Get the proportion of the star count relative to the min and max star counts
+         starBar.style.height = `${getBarHeight(repo.stargazersCount)}px`;
+         starBar.style.width = '2.5px';
+         starBar.style.backgroundColor = `#fde047`;
+         starBar.style.borderTopLeftRadius = '1px';
+         starBar.style.borderTopRightRadius = '1px';
+         starBar.style.marginBottom = '-2px';
+         starBar.classList.add('star-bar')
+
+         const repoCard = document.createElement('div');
+         repoCard.innerHTML += `
+            <div class="flex items-center mb-1.5">
+               <img class='rounded-full drop-shadow-md w-6 h-6 mr-3' style="box-shadow: rgba(240, 246, 252, 0.1) 0px 0px 0px 1px;" src="${repo.ownerAvatarUrl}">
+               <a class='text-blue-400 hover:underline text-base' href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>
+            </div>
+         `;
+         if (repo.description) {
+            repoCard.innerHTML += `<div class="mb-1.5 text-gray-50">${trimDescription(repo.description)}</div>`
+         }
+         repoCard.innerHTML += `
+            <div class="flex flex-wrap">
+               <div class="flex items-center text-sm mr-2">
+                  <div class="w-2.5 h-2.5 inline-block rounded-full mr-1.5" style="background-color: ${getGithubLanguageColor(repo.language)};"></div>
+                  <div class="text-gray-400 whitespace-nowrap">${repo.language}</div>
+               </div>
+               <div class="mr-2 text-sm text-gray-400">·</div>
+               <div class="flex items-center text-sm mr-2">
+                  <svg class="text-gray-400 align-center inline-block mr-1" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path></svg>
+                  <span class="text-gray-400 align-bottom whitespace-nowrap">${repo.stargazersCount}</span>
+               </div>
+               <div class="mr-2 text-sm text-gray-400">·</div>
+               <div class="text-gray-400 text-sm whitespace-nowrap">
+                  ${generateUpdatedString(repo.updatedAt)}
+               </div>
+            </div>
+         `
+         repoCard.style.display = 'none';
+         repoCard.classList.add("p-4", "border-gray-800", "border", "rounded", "text-white")
+         repoCard.style.width = getRepoCardWidth();
+
+         const virtualSlider = document.createElement('div');
+         virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-3", "w-4", "h-4", "mb-8")
+
+         const pointer = document.createElement('div');
+         pointer.classList.add("z-10", "invisible")
+         pointer.innerHTML = `
+            <svg height="50" viewBox="0 0 45 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <path d="M22.103 66C34.3092 66 44.2061 56.1031 44.2061 43.897C44.2061 33.0104 26.7216 6.28884 22.8453 0.433189C22.5154 -0.144127 21.6907 -0.144127 21.3608 0.433189C17.4845 6.28884 3.8147e-06 33.0104 3.8147e-06 43.897C3.8147e-06 56.1031 9.89688 66 22.103 66Z" fill="#4B5563"/>
+               <path d="M26.5145 56.6389V53.2512C26.5587 52.6885 26.4828 52.1226 26.2916 51.5914C26.1005 51.0603 25.7986 50.5758 25.4061 50.1705C29.1087 49.7574 33 48.3527 33 41.908C32.9996 40.26 32.3664 38.6752 31.2312 37.4816C31.7687 36.0398 31.7307 34.4461 31.1251 33.0316C31.1251 33.0316 29.7336 32.6185 26.5145 34.7786C23.8118 34.0453 20.9629 34.0453 18.2602 34.7786C15.0411 32.6185 13.6496 33.0316 13.6496 33.0316C13.044 34.4461 13.006 36.0398 13.5435 37.4816C12.3999 38.684 11.7659 40.2831 11.7747 41.9434C11.7747 48.3409 15.666 49.7456 19.3686 50.2059C18.9807 50.6072 18.6815 51.0858 18.4905 51.6104C18.2996 52.1351 18.2211 52.6942 18.2602 53.2512V56.6389" fill="white"/>
+               <path d="M26.5145 56.6389V53.2512C26.5587 52.6885 26.4828 52.1226 26.2916 51.5914C26.1005 51.0603 25.7986 50.5758 25.4061 50.1705C29.1087 49.7574 33 48.3527 33 41.908C32.9996 40.26 32.3664 38.6752 31.2312 37.4816C31.7687 36.0398 31.7307 34.4461 31.1251 33.0316C31.1251 33.0316 29.7336 32.6185 26.5145 34.7786C23.8118 34.0453 20.9629 34.0453 18.2602 34.7786C15.0411 32.6185 13.6496 33.0316 13.6496 33.0316C13.044 34.4461 13.006 36.0398 13.5435 37.4816C12.3999 38.684 11.7659 40.2831 11.7747 41.9434C11.7747 48.3409 15.666 49.7456 19.3686 50.2059C18.9807 50.6072 18.6815 51.0858 18.4905 51.6104C18.2996 52.1351 18.2211 52.6942 18.2602 53.2512V56.6389" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+               <path d="M18.2346 54.2925C14.7055 55.4427 11.7646 54.2925 10 50.7471" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>`;
+         pointers.push(pointer)
+
+         const sliderContainer = document.createElement('div');
+         sliderContainer.classList.add("relative")
+         const slider = document.createElement('div');
+         slider.classList.add("bg-gray-800", "absolute", "-top-6", "-left-1.5", "z-0")
+         slider.style.width = '13px'
+         slider.style.height = '16px'
+         // Special values for the ends
+         if (i === 0) {
+            slider.style.borderTopLeftRadius = '4px'
+            slider.style.borderBottomLeftRadius = '4px'
+            slider.style.width = '11px'
+         } else if (i === data.length - 1) {
+            slider.style.borderTopRightRadius = '4px'
+            slider.style.borderBottomRightRadius = '4px'
+         }
+         sliderContainer.appendChild(slider)
+
+         virtualSlider.appendChild(pointer)
+         virtualSlider.appendChild(sliderContainer)
+
+         virtualSlider.addEventListener('pointerdown', (event) => {
+            event.preventDefault();
+            const next = pointers.indexOf(pointer)
+            selectRepository(next);
+            activePointer = true;
+         })
+
+         document.addEventListener('pointermove', ({clientX: x}) => {
+            event.preventDefault();
+            if (activePointer && !mouseIsOverCurrentPointer(x)) {
+               const next = findClosestPointer(x)
+               selectRepository(next);
+            }
+         })
+
+
+         document.addEventListener('pointerup', (event) => {
+            event.preventDefault();
+            if (activePointer) {
+               activePointer = false;
+            }
+         })
+
+         div.appendChild(starBar);
+         div.appendChild(profile);
+         div.appendChild(virtualSlider);
+         div.appendChild(repoCard)
+
+         view.appendChild(div);
+
+      }
+   }
+
+   var supportsPassive = false;
+   try {
+      window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
+         get: function () { supportsPassive = true; } 
+      }));
+   } catch(e) {}
+
+   var wheelOpt = supportsPassive ? { passive: false } : false;
+
+   window.addEventListener('touchmove', (event) => {
+      if (activePointer) {
+         event.preventDefault();
+      }
+   }, wheelOpt)
+
+
+   function selectRepository(index) {
+      if (currentPointer === index) {
+         return;
+      }
+      if (currentPointer !== null) {
+         pointers[currentPointer].classList.add("invisible")
+         divs[currentPointer].classList.remove("hover")
+      }
+      currentPointer = index;
+      pointers[currentPointer].classList.remove("invisible")
+      divs[currentPointer].classList.add("hover")
+      const popOver = divs[currentPointer].children[3];
+      const clone = popOver.cloneNode(true)
+      clone.style.display = 'block';
+      document.getElementById("repository-view").replaceChildren(clone)
+   }
+
+   function randomize(arr) {
+      for (let i = 0; i < arr.length; i++) {
+         const j = Math.floor(Math.random() * arr.length);
+         const temp = arr[i];
+         arr[i] = arr[j];
+         arr[j] = temp;
+      }
+   }
+
+   function findClosestPointer(mouseX) {
+      // Uses binary search to find the closest pointer to the mouse
+      let left = 0;
+      let right = pointers.length - 1;
+      while (left < right) {
+         const mid = Math.floor((left + right) / 2);
+         const pointerLeft = pointers[mid].parentElement.getBoundingClientRect().left;
+         const pointerRight = pointers[mid].parentElement.getBoundingClientRect().right;
+         if (mouseX > pointerRight) {
+            left = mid + 1;
+         } else if (mouseX < pointerLeft) {
+            right = mid - 1;
+         } else {
+            return mid;
+         }
+      }
+      return left;
+   }
+
+   function mouseIsOverCurrentPointer(mouseX) {
+      const pointerLeft = pointers[currentPointer].parentElement.getBoundingClientRect().left;
+      const pointerRight = pointers[currentPointer].parentElement.getBoundingClientRect().right;
+      return mouseX >= pointerLeft && mouseX <= pointerRight;
+   }
+
+   function generateUpdatedString(dateString) {
+      const date = new Date(dateString);
+      if (date.toDateString() === new Date().toDateString()) {
+         return "Updated today";
+      }
+      if (date.toDateString() === new Date(new Date().setDate(new Date().getDate() - 1)).toDateString()) {
+         return "Updated yesterday";
+      }
+
+      if (date > new Date(new Date().setDate(new Date().getDate() - 20))) {
+         return `Updated ${Math.floor((new Date() - date) / 1000 / 60 / 60 / 24)} days ago`;
+      }
+
+      if (date.getMonth() === new Date().getMonth() - 1) {
+         return "Updated last month";
+      }
+
+      return `Updated on ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+   }
+
+   function getScreenSize() {
+      const width = window.innerWidth;
+      if (width <= 640) {
+         return "sm";
+      } else if (width <= 768) {
+         return "md";
+      } else if (width <= 1024) {
+         return "lg";
+      } else if (width <= 1280) {
+         return "xl";
+      } else {
+         return "2xl";
+      }
+   }
+
+   function getBarHeight(starCount) {
+      const starCountLog = Math.log(starCount);
+      const minStarCountLog = Math.log(minStarCount);
+      const maxStarCountLog = Math.log(maxStarCount);
+      const proportion = (starCountLog - minStarCountLog) / (maxStarCountLog - minStarCountLog);
+      return proportion * graphHeight + baseGraphHeight();
+   }
+
+   function baseGraphHeight() {
+      const size = getScreenSize()
+      switch (size) {
+         case 'sm':
+            return 90
+            break;
+         case 'md':
+         case 'lg': 
+         case 'xl':
+            return 100
+            break;
+         case '2xl':
+            return 150
+            break;
+      }
+   }
+
+   function trimDescription(description) {
+      if (description.length > MAX_DESCRIPTION_LENGTH) {
+         description = description.substring(0, MAX_DESCRIPTION_LENGTH);
+      }
+      // Continues to trim if last element is a special character
+      // To prevent a hanging special character
+      while (description.charCodeAt(description.length - 1) > 255) {
+         description = description.substring(0, description.length - 1);
+      }
+      return description + "...";
+   }
+
+   function getRepoCardWidth() {
+      const size = getScreenSize()
+      switch (size) {
+         case 'sm':
+            return "295px"
+         case 'md':
+            return "400px"
+         case 'xl':
+         case '2xl':
+         case 'lg':
+            return "500px"
+      }
+   }
+
+   </script>
+</body>
+</html>

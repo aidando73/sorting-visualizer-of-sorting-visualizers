@@ -1,0 +1,24 @@
+:root {
+   --yellow-300: #fde047;
+   --star-yellow: #facc15;
+}
+
+.repo-item.hover {
+   z-index: 100;
+}
+
+.repo-item.hover img {
+   width: 30px !important;
+   height: 30px !important;
+   margin-bottom: -5px !important;
+   margin-top: -5px !important;
+   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+   z-index: 200;
+}
+
+.repo-item.hover .star-bar {
+   cursor: pointer;
+   width: 8px !important;
+   border-radius: 4px 4px 0px 0px !important;
+   background-color: var(--yellow-300) !important;
+}
