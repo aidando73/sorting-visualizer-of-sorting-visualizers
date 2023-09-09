@@ -1,3 +1,4 @@
+from time import sleep
 from github import Github
 from github import Auth
 import os
@@ -14,7 +15,8 @@ count = 0
 for repo in repositories:
     count += 1
     print(f'{{"repoFullName": "{repo.full_name}", "stargazersCount": {repo.stargazers_count}}},')
-    if count == 700:
-        break
-
+    if count % 900 == 0:
+        # Github API has a rate limit of 30 search requests per minute
+        # there are 30 repositories per page
+        sleep(60)
 print ("]")
