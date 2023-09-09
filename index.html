@@ -4,6 +4,7 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>POC</title>
+   <link rel="stylesheet" href="index.css">
 </head>
 <body>
    <div id="view" style="display: flex; flex-direction: row; align-items: flex-end;">
@@ -1032,7 +1033,7 @@
 {"repoFullName": "nealarch01/SortingAlgoVisualizer", "stargazersCount": 1, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/73256760?v=4"},
 {"repoFullName": "Suyashbansod71/SortingAlgoVisualizer", "stargazersCount": 1, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/77398556?v=4"}
 ]
-   // truncate list to 200
+   // truncate list
    data = data.slice(0, 100);
    randomize(data);
 
@@ -1048,6 +1049,7 @@
       div.style.borderRadius = '5px';
       div.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;';
       div.style.backgroundColor = 'white';
+      div.classList.add('repo-item')
 
       const profile = document.createElement('img');
       profile.src = repo.ownerAvatarUrl;
@@ -1062,6 +1064,7 @@
       starBar.style.height = `${Math.log(repo.stargazersCount)*100}px`;
       starBar.style.width = '2px';
       starBar.style.backgroundColor = `red`;
+      starBar.classList.add('star-bar')
 
       div.appendChild(starBar);
       div.appendChild(profile);
