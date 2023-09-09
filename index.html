@@ -6,6 +6,9 @@
    <title>POC</title>
 </head>
 <body>
+   <div id="view" style="height: 900px; display: flex; align-items: flex-end;">
+   </div>
+
    <script>
       const data = [
    {"repoFullName": "bingmann/sound-of-sorting", "stargazersCount": "771"},
@@ -910,16 +913,16 @@
    {"repoFullName": "Sucram314/SortingVisualizer", "stargazersCount": "1"}
    ]
 
-   document.onload = function() {
-    var table = document.getElementById("myTable");
-    var row = table.insertRow(0);
-    var cell1 = row.insertCell(0);
-    cell1.innerHTML = "New cell";
+   console.log("hello world")
+   const view = document.getElementById("view");
+   for (let i = 0; i < data.length; i++) {
+      const repo = data[i];
+      const div = document.createElement('div');
+      div.style.height = `${repo.stargazersCount}px`;
+      div.style.width = `10px`;
+      div.style.backgroundColor = `red`;
+      view.appendChild(div);
    }
    </script>
-
-   <div style="height: 900px;">
-      hello world
-   </div>
 </body>
 </html>
