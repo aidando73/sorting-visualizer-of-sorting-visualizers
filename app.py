@@ -13,8 +13,8 @@ print ("[")
 count = 0
 for repo in repositories:
     count += 1
-    print(f'{{"repoFullName": "{repo.full_name}", "stargazersCount": "{repo.stargazers_count}"}},')
-    if count == 900:
+    print(f'{{"repoFullName": "{repo.full_name}", "stargazersCount": {repo.stargazers_count}}},')
+    if count == 700:
         break
 
 print ("]")
