@@ -7,7 +7,7 @@
    <link rel="stylesheet" href="index.css">
    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
 </head>
-<body style="">
+<body style="background-color: #030712;">
    <div style="display: flex; justify-content: center;">
       <div>
          <div id="view" style="display: flex; flex-direction: row; align-items: flex-end;">
@@ -157,7 +157,7 @@
       const starBar = document.createElement('div');
       starBar.style.height = `${Math.log(repo.stargazersCount)*100}px`;
       starBar.style.width = '2px';
-      starBar.style.backgroundColor = `#2563eb`;
+      starBar.style.backgroundColor = `#fde047`;
       starBar.classList.add('star-bar')
 
       const popOver = document.createElement('div');
