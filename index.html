@@ -1041,15 +1041,16 @@
    const view = document.getElementById("view");
    for (let i = 0; i < data.length; i++) {
       const repo = data[i];
-      const div = document.createElement('div');
+      const div = document.createElement('a');
       div.style.display = 'flex';
       div.style.flexDirection = 'column';
       div.style.alignItems = 'center';
       div.style.marginLeft = '-9px';
       div.style.borderRadius = '5px';
       div.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;';
-      div.style.backgroundColor = 'white';
+      div.style.backgroundColor = 'transparent';
       div.classList.add('repo-item')
+      div.href = `https://github.com/${repo.repoFullName}` 
 
       const profile = document.createElement('img');
       profile.src = repo.ownerAvatarUrl;
