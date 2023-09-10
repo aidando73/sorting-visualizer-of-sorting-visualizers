@@ -1,13 +1,13 @@
-.repo-item:hover {
+.repo-item.hover {
    z-index: 100;
 }
 
-.repo-item:hover img {
+.repo-item.hover img {
    width: 30px !important;
    height: 30px !important;
 }
 
-.repo-item:hover .star-bar {
+.repo-item.hover .star-bar {
    cursor: pointer;
    width: 8px !important;
 }

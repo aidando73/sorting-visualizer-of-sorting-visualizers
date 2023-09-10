@@ -1128,11 +1128,13 @@
          delayedPopover = setTimeout(() => {
             showAndPositionPopover(event)
          }, 500);
+         div.classList.add("hover")
       })
       div.addEventListener('focus', (event) => {
          delayedPopover = setTimeout(() => {
             showAndPositionPopover(event)
          }, 500);
+         div.classList.add("hover")
       })
       div.addEventListener('mouseleave', (event) => {
          if (delayedPopover) {
@@ -1140,6 +1142,7 @@
             hidePopover();
             delayedPopover = null;
          }
+         div.classList.remove("hover")
       });
       div.addEventListener('blur', (event) => {
          if (delayedPopover) {
@@ -1147,11 +1150,24 @@
             hidePopover();
             delayedPopover = null;
          }
+         div.classList.remove("hover")
       });
-      popOver.addEventListener('mouseleave', hidePopover)
-      popOver.addEventListener('blur', hidePopover)
-      popOver.addEventListener('mouseenter', showPopOver)
-      popOver.addEventListener('focus', showPopOver)
+      popOver.addEventListener('mouseleave', () => {
+         hidePopover()
+         div.classList.remove("hover");
+      })
+      popOver.addEventListener('blur', () => {
+         hidePopover()
+         div.classList.remove("hover")
+      })
+      popOver.addEventListener('mouseenter', () => {
+         showPopOver()
+         div.classList.add("hover");
+      })
+      popOver.addEventListener('focus', () => {
+         showPopOver()
+         div.classList.add("hover");
+      })
 
    }
 
