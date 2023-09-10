@@ -1038,12 +1038,12 @@
    data = data.slice(0, 100);
    randomize(data);
 
-   let x = 0;
-   let y = 0;
+   let mouseX = 0;
+   let mouseY = 0;
 
    document.onmousemove = ({ clientX, clientY }) => {
-      x = clientX;
-      y = clientY;
+      mouseX = clientX;
+      mouseY = clientY;
    };
 
    console.log("hello world")
@@ -1114,7 +1114,8 @@
 
       const showAndPositionPopover = () => {
          popOver.style.display = 'block';
-         virtualElement.getBoundingClientRect = generateGetBoundingClientRect(x, y, popOver.offsetWidth, popOver.offsetHeight);
+         const { x, width } = div.getBoundingClientRect();
+         virtualElement.getBoundingClientRect = generateGetBoundingClientRect(x + width/2 - 5, mouseY, popOver.offsetWidth, popOver.offsetHeight);
          instance.update();
       }
 
