@@ -5,6 +5,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>POC</title>
    <link rel="stylesheet" href="index.css">
+   <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
 </head>
 <body>
    <div id="view" style="display: flex; flex-direction: row; align-items: flex-end;">
@@ -1067,10 +1068,39 @@
       starBar.style.backgroundColor = `red`;
       starBar.classList.add('star-bar')
 
+      const popOver = document.createElement('div');
+      popOver.innerHTML = repo.repoFullName;
+      popOver.innerHTML += "<br>"
+      popOver.innerHTML += repo.stargazersCount + " stars"
+      popOver.style.display = 'none';
+      popOver.style.backgroundColor = 'white';
+      popOver.style.zIndex = '1000';
+
+
       div.appendChild(starBar);
       div.appendChild(profile);
 
       view.appendChild(div);
+      view.appendChild(popOver)
+
+      div.addEventListener('mouseenter', () => {
+         popOver.style.display = 'block';
+         popOver.update();
+      })
+      div.addEventListener('focus', () => {
+         popOver.style.display = 'block';
+         popOver.update();
+      })
+      div.addEventListener('mouseleave', () => {
+         popOver.style.display = 'none';
+      })
+      div.addEventListener('blur', () => {
+         popOver.style.display = 'none';
+      })
+
+      Popper.createPopper(div, popOver, {
+         placement: 'right',
+      })
    }
 
    function randomize(arr) {
