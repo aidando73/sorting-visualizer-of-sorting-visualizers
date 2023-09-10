@@ -1038,6 +1038,14 @@
    data = data.slice(0, 100);
    randomize(data);
 
+   let x = 0;
+   let y = 0;
+
+   document.onmousemove = ({ clientX, clientY }) => {
+      x = clientX;
+      y = clientY;
+   };
+
    console.log("hello world")
    const view = document.getElementById("view");
    for (let i = 0; i < data.length; i++) {
@@ -1100,37 +1108,51 @@
 
       const instance = Popper.createPopper(virtualElement, popOver)
 
-      div.addEventListener('mouseenter', ({clientX: x, clientY: y}) => {
+      const hidePopover = () => {
+         popOver.style.display = 'none';
+      }
+
+      const showAndPositionPopover = () => {
          popOver.style.display = 'block';
          virtualElement.getBoundingClientRect = generateGetBoundingClientRect(x, y, popOver.offsetWidth, popOver.offsetHeight);
-         console.log(popOver.offsetWidth)
          instance.update();
-      })
-      div.addEventListener('focus', ({clientX: x, clientY: y}) => {
+      }
+
+      const showPopOver = () => {
          popOver.style.display = 'block';
-         virtualElement.getBoundingClientRect = generateGetBoundingClientRect(x, y, popOver.offsetWidth, popOver.offsetHeight);
-         instance.update();
+      }
+
+      let delayedPopover = null;
+
+      div.addEventListener('mouseenter', (event) => {
+         delayedPopover = setTimeout(() => {
+            showAndPositionPopover(event)
+         }, 500);
       })
-      div.addEventListener('mouseleave', () => {
-         popOver.style.display = 'none';
+      div.addEventListener('focus', (event) => {
+         delayedPopover = setTimeout(() => {
+            showAndPositionPopover(event)
+         }, 500);
       })
-      div.addEventListener('blur', () => {
-         popOver.style.display = 'none';
-      })
-      popOver.addEventListener('mouseenter', () => {
-         popOver.style.display = 'block';
-         instance.update();
-      })
-      popOver.addEventListener('focus', () => {
-         popOver.style.display = 'block';
-         instance.update();
-      })
-      popOver.addEventListener('mouseleave', () => {
-         popOver.style.display = 'none';
-      })
-      popOver.addEventListener('blur', () => {
-         popOver.style.display = 'none';
-      })
+      div.addEventListener('mouseleave', (event) => {
+         if (delayedPopover) {
+            clearTimeout(delayedPopover);
+            hidePopover();
+            delayedPopover = null;
+         }
+      });
+      div.addEventListener('blur', (event) => {
+         if (delayedPopover) {
+            clearTimeout(delayedPopover);
+            hidePopover();
+            delayedPopover = null;
+         }
+      });
+      popOver.addEventListener('mouseleave', hidePopover)
+      popOver.addEventListener('blur', hidePopover)
+      popOver.addEventListener('mouseenter', showPopOver)
+      popOver.addEventListener('focus', showPopOver)
+
    }
 
    function randomize(arr) {
