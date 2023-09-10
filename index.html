@@ -1083,14 +1083,14 @@
       view.appendChild(div);
       view.appendChild(popOver)
 
-      function generateGetBoundingClientRect(x = 0, y = 0) {
+      function generateGetBoundingClientRect(x = 0, y = 0, width=0, height=0) {
          return () => ({
             width: 0,
             height: 0,
-            top: y,
+            top: y - height/2,
             right: x,
-            bottom: y,
-            left: x,
+            bottom: y ,
+            left: x + width/2 + 15,
          });
       }
 
@@ -1098,13 +1098,18 @@
          getBoundingClientRect: generateGetBoundingClientRect(),
       };
 
-      div.addEventListener('mouseenter', () => {
+      const instance = Popper.createPopper(virtualElement, popOver)
+
+      div.addEventListener('mouseenter', ({clientX: x, clientY: y}) => {
          popOver.style.display = 'block';
-         popOver.update();
+         virtualElement.getBoundingClientRect = generateGetBoundingClientRect(x, y, popOver.offsetWidth, popOver.offsetHeight);
+         console.log(popOver.offsetWidth)
+         instance.update();
       })
-      div.addEventListener('focus', () => {
+      div.addEventListener('focus', ({clientX: x, clientY: y}) => {
          popOver.style.display = 'block';
-         popOver.update();
+         virtualElement.getBoundingClientRect = generateGetBoundingClientRect(x, y, popOver.offsetWidth, popOver.offsetHeight);
+         instance.update();
       })
       div.addEventListener('mouseleave', () => {
          popOver.style.display = 'none';
@@ -1114,11 +1119,11 @@
       })
       popOver.addEventListener('mouseenter', () => {
          popOver.style.display = 'block';
-         popOver.update();
+         instance.update();
       })
       popOver.addEventListener('focus', () => {
          popOver.style.display = 'block';
-         popOver.update();
+         instance.update();
       })
       popOver.addEventListener('mouseleave', () => {
          popOver.style.display = 'none';
@@ -1126,13 +1131,6 @@
       popOver.addEventListener('blur', () => {
          popOver.style.display = 'none';
       })
-
-      const instance = Popper.createPopper(virtualElement, popOver)
-
-      document.addEventListener('mousemove', ({ clientX: x, clientY: y }) => {
-         virtualElement.getBoundingClientRect = generateGetBoundingClientRect(x, y);
-         instance.update();
-      });
    }
 
    function randomize(arr) {
