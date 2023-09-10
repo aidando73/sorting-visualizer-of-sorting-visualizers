@@ -1069,7 +1069,7 @@
       starBar.classList.add('star-bar')
 
       const popOver = document.createElement('div');
-      popOver.innerHTML = repo.repoFullName;
+      popOver.innerHTML = `<a href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>`;
       popOver.innerHTML += "<br>"
       popOver.innerHTML += repo.stargazersCount + " stars"
       popOver.style.display = 'none';
@@ -1095,6 +1095,20 @@
          popOver.style.display = 'none';
       })
       div.addEventListener('blur', () => {
+         popOver.style.display = 'none';
+      })
+      popOver.addEventListener('mouseenter', () => {
+         popOver.style.display = 'block';
+         popOver.update();
+      })
+      popOver.addEventListener('focus', () => {
+         popOver.style.display = 'block';
+         popOver.update();
+      })
+      popOver.addEventListener('mouseleave', () => {
+         popOver.style.display = 'none';
+      })
+      popOver.addEventListener('blur', () => {
          popOver.style.display = 'none';
       })
 
