@@ -23,7 +23,7 @@
          </div>
       </div>
    </div>
-   <div class="flex justify-center">
+   <div class="flex justify-center mt-2">
       <button type="button" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Sort</button>
    </div>
    <script>
@@ -166,8 +166,11 @@
 
       const starBar = document.createElement('div');
       starBar.style.height = `${Math.log(repo.stargazersCount)*100}px`;
-      starBar.style.width = '2px';
+      starBar.style.width = '2.5px';
       starBar.style.backgroundColor = `#fde047`;
+      starBar.style.borderTopLeftRadius = '1px';
+      starBar.style.borderTopRightRadius = '1px';
+      starBar.style.marginBottom = '-2px';
       starBar.classList.add('star-bar')
 
       const popOver = document.createElement('div');

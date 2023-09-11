@@ -16,6 +16,6 @@
 .repo-item.hover .star-bar {
    cursor: pointer;
    width: 8px !important;
-   border-radius: 4px 4px;
+   border-radius: 4px 4px 0px 0px !important;
    background-color: var(--yellow-300) !important;
 }
