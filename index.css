@@ -1,3 +1,8 @@
+:root {
+   --yellow-300: #fde047;
+   --star-yellow: #facc15;
+}
+
 .repo-item.hover {
    z-index: 100;
 }
