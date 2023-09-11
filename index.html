@@ -182,6 +182,8 @@
       popOver.innerHTML += repo.forks + " forks"
       popOver.innerHTML += "<br>"
       popOver.innerHTML += repo.language
+      popOver.innerHTML += "<br>"
+      popOver.innerHTML += generateUpdatedString(repo.updatedAt)
       popOver.style.display = 'none';
       popOver.style.backgroundColor = 'white';
       popOver.style.zIndex = '1000';
@@ -273,6 +275,26 @@
          div.classList.add("hover");
       })
 
+      
+      function generateUpdatedString(dateString) {
+         const date = new Date(dateString);
+         if (date.toDateString() === new Date().toDateString()) {
+            return "Updated today";
+         }
+         if (date.toDateString() === new Date(new Date().setDate(new Date().getDate() - 1)).toDateString()) {
+            return "Updated yesterday";
+         }
+
+         if (date > new Date(new Date().setDate(new Date().getDate() - 20))) {
+            return `Updated ${Math.floor((new Date() - date) / 1000 / 60 / 60 / 24)} days ago`;
+         }
+
+         if (date.getMonth() === new Date().getMonth() - 1) {
+            return "Updated last month";
+         }
+
+         return `Updated on ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+      }
    }
 
    function randomize(arr) {
