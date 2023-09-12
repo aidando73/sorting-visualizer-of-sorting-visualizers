@@ -194,16 +194,19 @@
       virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-2")
 
       const pointer = document.createElement('div');
-      pointer.classList.add("w-0", "h-0")
+      pointer.classList.add("w-0", "h-0", "z-10")
       pointer.style.borderLeft = '5px solid transparent';
       pointer.style.borderRight = '5px solid transparent';
-      pointer.style.borderBottom = '10px solid #555';
+      pointer.style.borderBottom = '10px solid white';
 
+      const sliderContainer = document.createElement('div');
+      sliderContainer.classList.add("relative")
       const slider = document.createElement('div');
-      slider.classList.add("w-3", "h-0.5", "bg-white")
+      slider.classList.add("w-3", "h-0.5", "bg-gray-500", "absolute", "-top-1", "-left-1.5", "z-0")
+      sliderContainer.appendChild(slider)
 
       virtualSlider.appendChild(pointer)
-      virtualSlider.appendChild(slider)
+      virtualSlider.appendChild(sliderContainer)
 
       div.appendChild(starBar);
       div.appendChild(profile);
