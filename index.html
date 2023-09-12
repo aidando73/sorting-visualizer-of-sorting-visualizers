@@ -233,7 +233,7 @@
          let right = pointers.length - 1;
          while (left < right) {
             const mid = Math.floor((left + right) / 2);
-            if (pointers[mid].getBoundingClientRect().left < x) {
+            if (pointers[mid].parentElement.getBoundingClientRect().x < x) {
                left = mid + 1;
             } else {
                right = mid;
@@ -242,9 +242,11 @@
          return pointers[left];
       }
 
-      virtualSlider.addEventListener('pointerup', (event) => {
+      document.addEventListener('pointerup', (event) => {
          event.preventDefault();
-         activePointer = false;
+         if (activePointer) {
+            activePointer = false;
+         }
       })
 
       div.appendChild(starBar);
