@@ -279,7 +279,6 @@
       let left = 0;
       let right = pointers.length - 1;
       while (left < right) {
-         console.log("test")
          const mid = Math.floor((left + right) / 2);
          const pointerLeft = pointers[mid].parentElement.getBoundingClientRect().left;
          const pointerRight = pointers[mid].parentElement.getBoundingClientRect().right;
