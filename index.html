@@ -136,6 +136,9 @@
    let mouseX = 0;
    let mouseY = 0;
 
+   const pointers = [];
+   let activePointer = false;
+
    document.onmousemove = ({ clientX, clientY }) => {
       mouseX = clientX;
       mouseY = clientY;
@@ -144,7 +147,7 @@
    const view = document.getElementById("view");
    for (let i = 0; i < data.length; i++) {
       const repo = data[i];
-      const div = document.createElement('a');
+      const div = document.createElement('div');
       div.style.display = 'flex';
       div.style.flexDirection = 'column';
       div.style.alignItems = 'center';
@@ -153,7 +156,7 @@
       div.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;';
       div.style.backgroundColor = 'transparent';
       div.classList.add('repo-item')
-      div.href = `https://github.com/${repo.repoFullName}` 
+      // div.href = `https://github.com/${repo.repoFullName}` 
 
       const profile = document.createElement('img');
       profile.src = repo.ownerAvatarUrl;
@@ -191,22 +194,43 @@
       popOver.classList.add("p-2")
 
       const virtualSlider = document.createElement('div');
-      virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-2")
+      virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-2", "w-4", "h-4")
 
       const pointer = document.createElement('div');
-      pointer.classList.add("w-0", "h-0", "z-10")
+      pointer.classList.add("w-0", "h-0", "z-10", "hidden")
       pointer.style.borderLeft = '5px solid transparent';
       pointer.style.borderRight = '5px solid transparent';
       pointer.style.borderBottom = '10px solid white';
+      pointers.push(pointer)
 
       const sliderContainer = document.createElement('div');
       sliderContainer.classList.add("relative")
       const slider = document.createElement('div');
-      slider.classList.add("w-3", "h-0.5", "bg-gray-500", "absolute", "-top-1", "-left-1.5", "z-0")
+      slider.classList.add("w-3", "h-3", "bg-gray-500", "absolute", "-top-1", "-left-1.5", "z-0")
       sliderContainer.appendChild(slider)
 
       virtualSlider.appendChild(pointer)
       virtualSlider.appendChild(sliderContainer)
+
+      virtualSlider.addEventListener('pointerdown', (event) => {
+         event.preventDefault();
+         pointers.forEach(pointer => pointer.classList.add("hidden"))
+         pointer.classList.remove("hidden")
+         activePointer = true;
+      })
+
+      virtualSlider.addEventListener('pointerover', (event) => {
+         event.preventDefault();
+         if (activePointer) {
+            pointers.forEach(pointer => pointer.classList.add("hidden"))
+            pointer.classList.remove("hidden")
+         }
+      })
+
+      virtualSlider.addEventListener('pointerup', (event) => {
+         event.preventDefault();
+         activePointer = false;
+      })
 
       div.appendChild(starBar);
       div.appendChild(profile);
@@ -248,51 +272,6 @@
       }
 
       let delayedPopover = null;
-
-      div.addEventListener('mouseenter', (event) => {
-         delayedPopover = setTimeout(() => {
-            showAndPositionPopover(event)
-         }, 400);
-         div.classList.add("hover")
-      })
-      div.addEventListener('focus', (event) => {
-         delayedPopover = setTimeout(() => {
-            showAndPositionPopover(event)
-         }, 400);
-         div.classList.add("hover")
-      })
-      div.addEventListener('mouseleave', (event) => {
-         if (delayedPopover) {
-            clearTimeout(delayedPopover);
-            hidePopover();
-            delayedPopover = null;
-         }
-         div.classList.remove("hover")
-      });
-      div.addEventListener('blur', (event) => {
-         if (delayedPopover) {
-            clearTimeout(delayedPopover);
-            hidePopover();
-            delayedPopover = null;
-         }
-         div.classList.remove("hover")
-      });
-      popOver.addEventListener('mouseleave', () => {
-         hidePopover()
-         div.classList.remove("hover");
-      })
-      popOver.addEventListener('blur', () => {
-         hidePopover()
-         div.classList.remove("hover")
-      })
-      popOver.addEventListener('mouseenter', () => {
-         showPopOver()
-         div.classList.add("hover");
-      })
-      popOver.addEventListener('focus', () => {
-         showPopOver()
-         div.classList.add("hover");
-      })
 
       
       function generateUpdatedString(dateString) {
