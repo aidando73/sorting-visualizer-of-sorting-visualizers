@@ -32,7 +32,7 @@
       </div>
    </div>
    <script>
-      let data = [
+      let originalData = [
 {"repoFullName": "bingmann/sound-of-sorting", "stargazersCount": 771, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/2604907?v=4", "language": "C++", "description": "The Sound of Sorting - \"Audibilization\" and Visualization of Sorting Algorithms", "forks": 117, "updatedAt": "2023-09-08 17:16:58"},
 {"repoFullName": "ForeignGods/Sorting-Algorithms-Blender", "stargazersCount": 638, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/78089013?v=4", "language": "Python", "description": "Sorting algorithms visualized using the Blender Python API.", "forks": 37, "updatedAt": "2023-09-09 07:36:29"},
 {"repoFullName": "clementmihailescu/Sorting-Visualizer", "stargazersCount": 583, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/20826081?v=4", "language": "JavaScript", "description": "Visualization Tool for Sorting Algorithms", "forks": 256, "updatedAt": "2023-09-08 21:36:09"},
@@ -134,14 +134,40 @@
 {"repoFullName": "mrkchoi/sort-visualizer", "stargazersCount": 13, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/40152546?v=4", "language": "JavaScript", "description": "Visualizes sorting algorithms, written in JS & D3.js", "forks": 0, "updatedAt": "2022-03-30 18:01:06"},
 {"repoFullName": "yet-another-alex/dearpygui-examples", "stargazersCount": 13, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/95575915?v=4", "language": "Python", "description": "Python code examples on how to create several applications using Dear PyGui. Includes building and editing a table, as well as visualizing sorting algorithms in a plot.", "forks": 4, "updatedAt": "2023-09-08 10:35:29"},
 ]
-   data = data.slice(0, 25)
+   let data = originalData;
+   if (window.width <= 670) {
+      data = originalData.slice(0, 25)
+   } else if (window.width <= 1200) {
+      data = originalData.slice(0, 50)
+   }
+
+   window.addEventListener('resize', () => {
+      const previousData = data;
+      if (window.innerWidth <= 670) {
+         data = originalData.slice(0, 25)
+      } else if (window.innerWidth <= 1200) {
+         data = originalData.slice(0, 50)
+      } else {
+         data = originalData;
+      }
+      if (previousData.length !== data.length) {
+         currentPointer = null;
+         activePointer = false;
+         divs = []
+         pointers = []
+         randomize(data);
+         render();
+         selectRepository(0);
+      }
+   })
+
    randomize(data);
 
    let mouseX = 0;
    let mouseY = 0;
 
-   const pointers = [];
-   const divs = [];
+   let pointers = [];
+   let divs = [];
    let currentPointer = null;
    let activePointer = false;
 
@@ -150,106 +176,110 @@
       mouseY = clientY;
    };
 
-   const view = document.getElementById("view");
-   for (let i = 0; i < data.length; i++) {
-      const repo = data[i];
-      const div = document.createElement('div');
-      div.style.display = 'flex';
-      div.style.flexDirection = 'column';
-      div.style.alignItems = 'center';
-      div.style.marginLeft = '-9px';
-      div.style.borderRadius = '5px';
-      div.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;';
-      div.style.backgroundColor = 'transparent';
-      div.classList.add('repo-item')
-      divs.push(div)
-      // div.href = `https://github.com/${repo.repoFullName}` 
+   render();
 
-      const profile = document.createElement('img');
-      profile.src = repo.ownerAvatarUrl;
-      profile.loading = 'lazy'
-      profile.style.height='20px'
-      profile.style.width='20px'
-      profile.style.objectFit='cover'
-      profile.style.borderRadius='50%'
-      profile.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;'
+   function render() {
+      const view = document.getElementById("view");
+      view.replaceChildren();
+      for (let i = 0; i < data.length; i++) {
+         const repo = data[i];
+         const div = document.createElement('div');
+         div.style.display = 'flex';
+         div.style.flexDirection = 'column';
+         div.style.alignItems = 'center';
+         div.style.marginLeft = '-9px';
+         div.style.borderRadius = '5px';
+         div.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;';
+         div.style.backgroundColor = 'transparent';
+         div.classList.add('repo-item')
+         divs.push(div)
+         // div.href = `https://github.com/${repo.repoFullName}` 
 
-      const starBar = document.createElement('div');
-      starBar.style.height = `${Math.log(repo.stargazersCount)*100}px`;
-      starBar.style.width = '2.5px';
-      starBar.style.backgroundColor = `#fde047`;
-      starBar.style.borderTopLeftRadius = '1px';
-      starBar.style.borderTopRightRadius = '1px';
-      starBar.style.marginBottom = '-2px';
-      starBar.classList.add('star-bar')
+         const profile = document.createElement('img');
+         profile.src = repo.ownerAvatarUrl;
+         profile.loading = 'lazy'
+         profile.style.height='20px'
+         profile.style.width='20px'
+         profile.style.objectFit='cover'
+         profile.style.borderRadius='50%'
+         profile.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;'
 
-      const popOver = document.createElement('div');
-      popOver.innerHTML += `<img class='rounded-full drop-shadow-md' src="${repo.ownerAvatarUrl}" width="20" height="20">`;
-      popOver.innerHTML += `<a class='text-bold' href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>`;
-      popOver.innerHTML += "<br>"
-      popOver.innerHTML += repo.description
-      popOver.innerHTML += "<br>"
-      popOver.innerHTML += repo.stargazersCount + " stars"
-      popOver.innerHTML += "<br>"
-      popOver.innerHTML += repo.forks + " forks"
-      popOver.innerHTML += "<br>"
-      popOver.innerHTML += repo.language
-      popOver.innerHTML += "<br>"
-      popOver.innerHTML += generateUpdatedString(repo.updatedAt)
-      popOver.style.display = 'none';
-      popOver.style.backgroundColor = 'white';
-      popOver.style.zIndex = '1000';
-      popOver.classList.add("p-2")
+         const starBar = document.createElement('div');
+         starBar.style.height = `${Math.log(repo.stargazersCount)*100}px`;
+         starBar.style.width = '2.5px';
+         starBar.style.backgroundColor = `#fde047`;
+         starBar.style.borderTopLeftRadius = '1px';
+         starBar.style.borderTopRightRadius = '1px';
+         starBar.style.marginBottom = '-2px';
+         starBar.classList.add('star-bar')
 
-      const virtualSlider = document.createElement('div');
-      virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-2", "w-4", "h-4")
+         const popOver = document.createElement('div');
+         popOver.innerHTML += `<img class='rounded-full drop-shadow-md' src="${repo.ownerAvatarUrl}" width="20" height="20">`;
+         popOver.innerHTML += `<a class='text-bold' href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>`;
+         popOver.innerHTML += "<br>"
+         popOver.innerHTML += repo.description
+         popOver.innerHTML += "<br>"
+         popOver.innerHTML += repo.stargazersCount + " stars"
+         popOver.innerHTML += "<br>"
+         popOver.innerHTML += repo.forks + " forks"
+         popOver.innerHTML += "<br>"
+         popOver.innerHTML += repo.language
+         popOver.innerHTML += "<br>"
+         popOver.innerHTML += generateUpdatedString(repo.updatedAt)
+         popOver.style.display = 'none';
+         popOver.style.backgroundColor = 'white';
+         popOver.style.zIndex = '1000';
+         popOver.classList.add("p-2")
 
-      const pointer = document.createElement('div');
-      pointer.classList.add("w-0", "h-0", "z-10", "hidden")
-      pointer.style.borderLeft = '5px solid transparent';
-      pointer.style.borderRight = '5px solid transparent';
-      pointer.style.borderBottom = '10px solid white';
-      pointers.push(pointer)
+         const virtualSlider = document.createElement('div');
+         virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-2", "w-4", "h-4")
 
-      const sliderContainer = document.createElement('div');
-      sliderContainer.classList.add("relative")
-      const slider = document.createElement('div');
-      slider.classList.add("w-3", "h-3", "bg-gray-500", "absolute", "-top-1", "-left-1.5", "z-0")
-      sliderContainer.appendChild(slider)
+         const pointer = document.createElement('div');
+         pointer.classList.add("w-0", "h-0", "z-10", "hidden")
+         pointer.style.borderLeft = '5px solid transparent';
+         pointer.style.borderRight = '5px solid transparent';
+         pointer.style.borderBottom = '10px solid white';
+         pointers.push(pointer)
 
-      virtualSlider.appendChild(pointer)
-      virtualSlider.appendChild(sliderContainer)
+         const sliderContainer = document.createElement('div');
+         sliderContainer.classList.add("relative")
+         const slider = document.createElement('div');
+         slider.classList.add("w-3", "h-3", "bg-gray-500", "absolute", "-top-1", "-left-1.5", "z-0")
+         sliderContainer.appendChild(slider)
 
-      virtualSlider.addEventListener('pointerdown', (event) => {
-         event.preventDefault();
-         const next = pointers.indexOf(pointer)
-         selectRepository(next);
-         activePointer = true;
-      })
+         virtualSlider.appendChild(pointer)
+         virtualSlider.appendChild(sliderContainer)
 
-      document.addEventListener('pointermove', ({clientX: x}) => {
-         event.preventDefault();
-         console.log(x)
-         if (activePointer && !mouseIsOverCurrentPointer(x)) {
-            const next = findClosestPointer(x)
+         virtualSlider.addEventListener('pointerdown', (event) => {
+            event.preventDefault();
+            const next = pointers.indexOf(pointer)
             selectRepository(next);
-         }
-      })
+            activePointer = true;
+         })
 
-      document.addEventListener('pointerup', (event) => {
-         event.preventDefault();
-         if (activePointer) {
-            activePointer = false;
-         }
-      })
+         document.addEventListener('pointermove', ({clientX: x}) => {
+            event.preventDefault();
+            if (activePointer && !mouseIsOverCurrentPointer(x)) {
+               const next = findClosestPointer(x)
+               selectRepository(next);
+            }
+         })
 
-      div.appendChild(starBar);
-      div.appendChild(profile);
-      div.appendChild(virtualSlider);
-      div.appendChild(popOver)
+         document.addEventListener('pointerup', (event) => {
+            event.preventDefault();
+            if (activePointer) {
+               activePointer = false;
+            }
+         })
 
-      view.appendChild(div);
+         div.appendChild(starBar);
+         div.appendChild(profile);
+         div.appendChild(virtualSlider);
+         div.appendChild(popOver)
 
+         view.appendChild(div);
+
+      }
    }
 
    selectRepository(0);
@@ -265,6 +295,7 @@
       currentPointer = index;
       pointers[currentPointer].classList.remove("hidden")
       divs[currentPointer].classList.add("hover")
+      console.log(currentPointer)
       const popOver = divs[currentPointer].children[3];
       const clone = popOver.cloneNode(true)
       clone.style.display = 'block';

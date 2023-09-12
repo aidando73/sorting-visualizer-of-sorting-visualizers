@@ -11,7 +11,8 @@ auth = Auth.Token(github_access_token)
 g = Github(auth=auth)
 
 black_list = [
-    "klonnet23/helloy-word"
+    "klonnet23/helloy-word",
+    "sanusanth/Python-Basic-programs"
 ]
 
 repositories = g.search_repositories(query='Sorting Visualizer', sort='stars', order='desc')
