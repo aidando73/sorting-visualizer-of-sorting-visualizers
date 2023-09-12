@@ -7,6 +7,7 @@
    <link rel="stylesheet" href="index.css">
    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
    <script src="https://cdn.tailwindcss.com"></script>
+   <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 </head>
 <body class="bg-gray-950">
    <div class="bg-gray-950 rounded-lg p-6 mt-8" style="display: flex; justify-content: center; align-items: center;">
@@ -137,6 +138,7 @@
    let mouseY = 0;
 
    const pointers = [];
+   let currentPointer = 0;
    let activePointer = false;
 
    document.onmousemove = ({ clientX, clientY }) => {
@@ -216,14 +218,19 @@
          event.preventDefault();
          pointers.forEach(pointer => pointer.classList.add("hidden"))
          pointer.classList.remove("hidden")
+         currentPointer = pointers.indexOf(pointer)
          activePointer = true;
       })
 
       document.addEventListener('pointerover', ({clientX: x}) => {
          event.preventDefault();
          if (activePointer) {
-            pointers.forEach(pointer => pointer.classList.add("hidden"))
-            findClosestPointer(x).classList.remove("hidden")
+            _.throttle(() => {
+               console.log("running")
+               pointers[currentPointer].classList.add("hidden")
+               currentPointer = findClosestPointer(x)
+               pointers[currentPointer].classList.remove("hidden")
+            }, 50)();
          }
       })
 
@@ -233,13 +240,13 @@
          let right = pointers.length - 1;
          while (left < right) {
             const mid = Math.floor((left + right) / 2);
-            if (pointers[mid].parentElement.getBoundingClientRect().x < x) {
+            if (pointers[mid].parentElement.getBoundingClientRect().left < x) {
                left = mid + 1;
             } else {
                right = mid;
             }
          }
-         return pointers[left];
+         return left;
       }
 
       document.addEventListener('pointerup', (event) => {
