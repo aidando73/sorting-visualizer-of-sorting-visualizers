@@ -227,8 +227,9 @@
          activePointer = true;
       })
 
-      document.addEventListener('pointerover', ({clientX: x}) => {
+      document.addEventListener('pointermove', ({clientX: x}) => {
          event.preventDefault();
+         console.log(x)
          if (activePointer && !mouseIsOverCurrentPointer(x)) {
             const next = findClosestPointer(x)
             selectRepository(next);
