@@ -25,7 +25,7 @@
          </div>
       </div>
    </div>
-   <div class="flex justify-center mt-2">
+   <div class="flex flex-col items-center justify-center mt-2">
       <button type="button" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Sort</button>
       <div id="repository-view">
 
@@ -135,9 +135,9 @@
 {"repoFullName": "yet-another-alex/dearpygui-examples", "stargazersCount": 13, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/95575915?v=4", "language": "Python", "description": "Python code examples on how to create several applications using Dear PyGui. Includes building and editing a table, as well as visualizing sorting algorithms in a plot.", "forks": 4, "updatedAt": "2023-09-08 10:35:29"},
 ]
    let data = originalData;
-   if (window.width <= 670) {
+   if (window.innerWidth <= 670) {
       data = originalData.slice(0, 25)
-   } else if (window.width <= 1200) {
+   } else if (window.innerWidth <= 1200) {
       data = originalData.slice(0, 50)
    }
 
