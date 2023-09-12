@@ -138,6 +138,7 @@
    let mouseY = 0;
 
    const pointers = [];
+   const divs = [];
    let currentPointer = 0;
    let activePointer = false;
 
@@ -158,6 +159,7 @@
       div.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;';
       div.style.backgroundColor = 'transparent';
       div.classList.add('repo-item')
+      divs.push(div)
       // div.href = `https://github.com/${repo.repoFullName}` 
 
       const profile = document.createElement('img');
@@ -217,8 +219,10 @@
       virtualSlider.addEventListener('pointerdown', (event) => {
          event.preventDefault();
          pointers[currentPointer].classList.add("hidden")
-         pointer.classList.remove("hidden")
+         divs[currentPointer].classList.remove("hover")
          currentPointer = pointers.indexOf(pointer)
+         pointers[currentPointer].classList.remove("hidden")
+         divs[currentPointer].classList.add("hover")
          activePointer = true;
       })
 
@@ -227,8 +231,10 @@
          if (activePointer) {
             _.throttle(() => {
                pointers[currentPointer].classList.add("hidden")
+               divs[currentPointer].classList.remove("hover")
                currentPointer = findClosestPointer(x)
                pointers[currentPointer].classList.remove("hidden")
+               divs[currentPointer].classList.add("hover")
             }, 50)();
          }
       })
