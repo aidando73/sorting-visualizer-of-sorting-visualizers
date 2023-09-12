@@ -219,13 +219,28 @@
          activePointer = true;
       })
 
-      virtualSlider.addEventListener('pointerover', (event) => {
+      document.addEventListener('pointerover', ({clientX: x}) => {
          event.preventDefault();
          if (activePointer) {
             pointers.forEach(pointer => pointer.classList.add("hidden"))
-            pointer.classList.remove("hidden")
+            findClosestPointer(x).classList.remove("hidden")
          }
       })
+
+      function findClosestPointer(x) {
+         // Uses binary search to find the closest pointer to the mouse
+         let left = 0;
+         let right = pointers.length - 1;
+         while (left < right) {
+            const mid = Math.floor((left + right) / 2);
+            if (pointers[mid].getBoundingClientRect().left < x) {
+               left = mid + 1;
+            } else {
+               right = mid;
+            }
+         }
+         return pointers[left];
+      }
 
       virtualSlider.addEventListener('pointerup', (event) => {
          event.preventDefault();
