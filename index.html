@@ -10,8 +10,8 @@
    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 </head>
 <body class="bg-gray-950">
-   <div class="bg-gray-950 rounded-lg p-6 mt-8" style="display: flex; justify-content: center; align-items: center;">
-      <div class="w-6 mr-8">
+   <div class="bg-gray-950 rounded-lg sm:p-6 mt-8" style="display: flex; justify-content: center; align-items: center;">
+      <div class="w-6 mr-8 hidden sm:block">
          <div class="origin-top-left translate-y-32 -rotate-90 pr-12 whitespace-nowrap">
             <span class="text-white">Number of stars </span>
             <svg class="inline w-5"  fill="var(--yellow-300)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="m12.672.668 3.059 6.197 6.838.993a.75.75 0 0 1 .416 1.28l-4.948 4.823 1.168 6.812a.75.75 0 0 1-1.088.79L12 18.347l-6.116 3.216a.75.75 0 0 1-1.088-.791l1.168-6.811-4.948-4.823a.749.749 0 0 1 .416-1.279l6.838-.994L11.327.668a.75.75 0 0 1 1.345 0Z"/></svg>
@@ -134,7 +134,7 @@
 {"repoFullName": "mrkchoi/sort-visualizer", "stargazersCount": 13, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/40152546?v=4", "language": "JavaScript", "description": "Visualizes sorting algorithms, written in JS & D3.js", "forks": 0, "updatedAt": "2022-03-30 18:01:06"},
 {"repoFullName": "yet-another-alex/dearpygui-examples", "stargazersCount": 13, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/95575915?v=4", "language": "Python", "description": "Python code examples on how to create several applications using Dear PyGui. Includes building and editing a table, as well as visualizing sorting algorithms in a plot.", "forks": 4, "updatedAt": "2023-09-08 10:35:29"},
 ]
-   
+   data = data.slice(0, 25)
    randomize(data);
 
    let mouseX = 0;
