@@ -252,6 +252,7 @@
 
          virtualSlider.addEventListener('pointerdown', (event) => {
             event.preventDefault();
+            console.log("pointerdown")
             const next = pointers.indexOf(pointer)
             selectRepository(next);
             activePointer = true;
@@ -259,6 +260,7 @@
 
          document.addEventListener('pointermove', ({clientX: x}) => {
             event.preventDefault();
+            console.log("pointermove")
             if (activePointer && !mouseIsOverCurrentPointer(x)) {
                const next = findClosestPointer(x)
                selectRepository(next);
@@ -295,7 +297,6 @@
       currentPointer = index;
       pointers[currentPointer].classList.remove("hidden")
       divs[currentPointer].classList.add("hover")
-      console.log(currentPointer)
       const popOver = divs[currentPointer].children[3];
       const clone = popOver.cloneNode(true)
       clone.style.display = 'block';
