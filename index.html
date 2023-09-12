@@ -228,42 +228,11 @@
 
       document.addEventListener('pointerover', ({clientX: x}) => {
          event.preventDefault();
-         if (activePointer) {
-            _.throttle(() => {
-               const next = findClosestPointer(x)
-               selectRepository(next);
-            }, 50)();
+         if (activePointer && !mouseIsOverCurrentPointer(x)) {
+            const next = findClosestPointer(x)
+            selectRepository(next);
          }
       })
-
-      function findClosestPointer(mouseX) {
-         // Uses binary search to find the closest pointer to the mouse
-         let left = 0;
-         let right = pointers.length - 1;
-         while (left < right) {
-            const mid = Math.floor((left + right) / 2);
-            const pointerLeft = pointers[mid].parentElement.getBoundingClientRect().left;
-            const pointerRight = pointers[mid].parentElement.getBoundingClientRect().right;
-            if (mouseX > pointerRight) {
-               left = mid + 1;
-            } else if (mouseX < pointerLeft) {
-               right = mid - 1;
-            } else {
-               return mid;
-            }
-         }
-         return left;
-      }
-
-      function selectRepository(index) {
-         pointers[currentPointer].classList.add("hidden")
-         divs[currentPointer].classList.remove("hover")
-         currentPointer = index;
-         pointers[currentPointer].classList.remove("hidden")
-         divs[currentPointer].classList.add("hover")
-         const popOver = divs[currentPointer].children[1];
-         document.getElementById("repository-view").replaceChildren(popOver.cloneNode(true))
-      }
 
       document.addEventListener('pointerup', (event) => {
          event.preventDefault();
@@ -275,64 +244,25 @@
       div.appendChild(starBar);
       div.appendChild(profile);
       div.appendChild(virtualSlider);
+      div.appendChild(popOver)
 
       view.appendChild(div);
-      view.appendChild(popOver)
 
-      function generateGetBoundingClientRect(x = 0, y = 0, width=0, height=0) {
-         return () => ({
-            width: 0,
-            height: 0,
-            top: y - height/2,
-            right: x,
-            bottom: y ,
-            left: x + width/2 + 15,
-         });
+   }
+
+   function selectRepository(index) {
+      if (currentPointer === index) {
+         return;
       }
-
-      const virtualElement = {
-         getBoundingClientRect: generateGetBoundingClientRect(),
-      };
-
-      const instance = Popper.createPopper(virtualElement, popOver)
-
-      const hidePopover = () => {
-         popOver.style.display = 'none';
-      }
-
-      const showAndPositionPopover = () => {
-         popOver.style.display = 'block';
-         const { x, width } = div.getBoundingClientRect();
-         virtualElement.getBoundingClientRect = generateGetBoundingClientRect(x + width/2 - 5, mouseY, popOver.offsetWidth, popOver.offsetHeight);
-         instance.update();
-      }
-
-      const showPopOver = () => {
-         popOver.style.display = 'block';
-      }
-
-      let delayedPopover = null;
-
-      
-      function generateUpdatedString(dateString) {
-         const date = new Date(dateString);
-         if (date.toDateString() === new Date().toDateString()) {
-            return "Updated today";
-         }
-         if (date.toDateString() === new Date(new Date().setDate(new Date().getDate() - 1)).toDateString()) {
-            return "Updated yesterday";
-         }
-
-         if (date > new Date(new Date().setDate(new Date().getDate() - 20))) {
-            return `Updated ${Math.floor((new Date() - date) / 1000 / 60 / 60 / 24)} days ago`;
-         }
-
-         if (date.getMonth() === new Date().getMonth() - 1) {
-            return "Updated last month";
-         }
-
-         return `Updated on ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
-      }
+      pointers[currentPointer].classList.add("hidden")
+      divs[currentPointer].classList.remove("hover")
+      currentPointer = index;
+      pointers[currentPointer].classList.remove("hidden")
+      divs[currentPointer].classList.add("hover")
+      const popOver = divs[currentPointer].children[3];
+      const clone = popOver.cloneNode(true)
+      clone.style.display = 'block';
+      document.getElementById("repository-view").replaceChildren(clone)
    }
 
    function randomize(arr) {
@@ -342,6 +272,52 @@
          arr[i] = arr[j];
          arr[j] = temp;
       }
+   }
+
+   function findClosestPointer(mouseX) {
+      // Uses binary search to find the closest pointer to the mouse
+      let left = 0;
+      let right = pointers.length - 1;
+      while (left < right) {
+         console.log("test")
+         const mid = Math.floor((left + right) / 2);
+         const pointerLeft = pointers[mid].parentElement.getBoundingClientRect().left;
+         const pointerRight = pointers[mid].parentElement.getBoundingClientRect().right;
+         if (mouseX > pointerRight) {
+            left = mid + 1;
+         } else if (mouseX < pointerLeft) {
+            right = mid - 1;
+         } else {
+            return mid;
+         }
+      }
+      return left;
+   }
+
+   function mouseIsOverCurrentPointer(mouseX) {
+      const pointerLeft = pointers[currentPointer].parentElement.getBoundingClientRect().left;
+      const pointerRight = pointers[currentPointer].parentElement.getBoundingClientRect().right;
+      return mouseX >= pointerLeft && mouseX <= pointerRight;
+   }
+
+   function generateUpdatedString(dateString) {
+      const date = new Date(dateString);
+      if (date.toDateString() === new Date().toDateString()) {
+         return "Updated today";
+      }
+      if (date.toDateString() === new Date(new Date().setDate(new Date().getDate() - 1)).toDateString()) {
+         return "Updated yesterday";
+      }
+
+      if (date > new Date(new Date().setDate(new Date().getDate() - 20))) {
+         return `Updated ${Math.floor((new Date() - date) / 1000 / 60 / 60 / 24)} days ago`;
+      }
+
+      if (date.getMonth() === new Date().getMonth() - 1) {
+         return "Updated last month";
+      }
+
+      return `Updated on ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
    }
    </script>
 </body>
