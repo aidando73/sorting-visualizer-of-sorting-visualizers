@@ -216,7 +216,7 @@
 
       virtualSlider.addEventListener('pointerdown', (event) => {
          event.preventDefault();
-         pointers.forEach(pointer => pointer.classList.add("hidden"))
+         pointers[currentPointer].classList.add("hidden")
          pointer.classList.remove("hidden")
          currentPointer = pointers.indexOf(pointer)
          activePointer = true;
@@ -226,7 +226,6 @@
          event.preventDefault();
          if (activePointer) {
             _.throttle(() => {
-               console.log("running")
                pointers[currentPointer].classList.add("hidden")
                currentPointer = findClosestPointer(x)
                pointers[currentPointer].classList.remove("hidden")
@@ -234,16 +233,20 @@
          }
       })
 
-      function findClosestPointer(x) {
+      function findClosestPointer(mouseX) {
          // Uses binary search to find the closest pointer to the mouse
          let left = 0;
          let right = pointers.length - 1;
          while (left < right) {
             const mid = Math.floor((left + right) / 2);
-            if (pointers[mid].parentElement.getBoundingClientRect().left < x) {
+            const pointerLeft = pointers[mid].parentElement.getBoundingClientRect().left;
+            const pointerRight = pointers[mid].parentElement.getBoundingClientRect().right;
+            if (mouseX > pointerRight) {
                left = mid + 1;
+            } else if (mouseX < pointerLeft) {
+               right = mid - 1;
             } else {
-               right = mid;
+               return mid;
             }
          }
          return left;
