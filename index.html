@@ -261,6 +261,8 @@
          currentPointer = index;
          pointers[currentPointer].classList.remove("hidden")
          divs[currentPointer].classList.add("hover")
+         const popOver = divs[currentPointer].children[1];
+         document.getElementById("repository-view").replaceChildren(popOver.cloneNode(true))
       }
 
       document.addEventListener('pointerup', (event) => {
