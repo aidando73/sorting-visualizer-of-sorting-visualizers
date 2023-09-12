@@ -267,6 +267,7 @@
             }
          })
 
+
          document.addEventListener('pointerup', (event) => {
             event.preventDefault();
             if (activePointer) {
@@ -283,6 +284,21 @@
 
       }
    }
+
+   var supportsPassive = false;
+   try {
+   window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
+      get: function () { supportsPassive = true; } 
+   }));
+   } catch(e) {}
+
+   var wheelOpt = supportsPassive ? { passive: false } : false;
+
+   window.addEventListener('touchmove', (event) => {
+      if (activePointer) {
+         event.preventDefault();
+      }
+   }, wheelOpt)
 
    selectRepository(0);
 
