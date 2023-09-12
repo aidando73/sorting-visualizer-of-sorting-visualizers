@@ -21,9 +21,6 @@
          <div>
             <div id="view" style="display: flex; flex-direction: row; align-items: flex-end;">
             </div>
-            <div class="-ml-2">
-               <input id="default-range" type="range" value="50" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
-            </div>
          </div>
       </div>
    </div>
@@ -193,9 +190,25 @@
       popOver.style.zIndex = '1000';
       popOver.classList.add("p-2")
 
+      const virtualSlider = document.createElement('div');
+      virtualSlider.classList.add("flex", "flex-col", "items-center")
+
+      const pointer = document.createElement('div');
+      // selector.classList.add("w-4", "h-4", "bg-white", "rounded-full")
+      pointer.classList.add("w-0", "h-0")
+      pointer.style.borderLeft = '5px solid transparent';
+      pointer.style.borderRight = '5px solid transparent';
+      pointer.style.borderBottom = '10px solid #555';
+
+      const slider = document.createElement('div');
+      slider.classList.add("w-3", "h-0.5", "bg-white")
+
+      virtualSlider.appendChild(pointer)
+      virtualSlider.appendChild(slider)
 
       div.appendChild(starBar);
       div.appendChild(profile);
+      div.appendChild(virtualSlider);
 
       view.appendChild(div);
       view.appendChild(popOver)
