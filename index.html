@@ -142,7 +142,7 @@
 
    const pointers = [];
    const divs = [];
-   let currentPointer = 0;
+   let currentPointer = null;
    let activePointer = false;
 
    document.onmousemove = ({ clientX, clientY }) => {
@@ -184,7 +184,8 @@
       starBar.classList.add('star-bar')
 
       const popOver = document.createElement('div');
-      popOver.innerHTML = `<a class='text-bold' href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>`;
+      popOver.innerHTML += `<img class='rounded-full drop-shadow-md' src="${repo.ownerAvatarUrl}" width="20" height="20">`;
+      popOver.innerHTML += `<a class='text-bold' href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>`;
       popOver.innerHTML += "<br>"
       popOver.innerHTML += repo.description
       popOver.innerHTML += "<br>"
@@ -250,12 +251,16 @@
 
    }
 
+   selectRepository(0);
+
    function selectRepository(index) {
       if (currentPointer === index) {
          return;
       }
-      pointers[currentPointer].classList.add("hidden")
-      divs[currentPointer].classList.remove("hover")
+      if (currentPointer !== null) {
+         pointers[currentPointer].classList.add("hidden")
+         divs[currentPointer].classList.remove("hover")
+      }
       currentPointer = index;
       pointers[currentPointer].classList.remove("hidden")
       divs[currentPointer].classList.add("hover")
