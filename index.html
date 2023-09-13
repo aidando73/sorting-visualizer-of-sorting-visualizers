@@ -11,7 +11,7 @@
 <body class="bg-gray-950 flex justify-center">
 
    <div class="bg-gray-950 rounded-lg sm:p-6 mt-8 inline-flex flex-col items-stretch">
-      <div id="repository-view" class="pl-12 pr-0.5 mb-2 flex justify-end h-60 items-start">
+      <div id="repository-view" class="sm:pl-12 pr-0.5 mb-2 flex justify-start lg:justify-end h-60 items-start break-all sm:break-normal">
 
       </div>
       <div class="flex justify-center items-center">
@@ -29,7 +29,7 @@
             </div>
          </div>
       </div>
-      <div class="mt-8 pl-12">
+      <div class="mt-8 sm:pl-12">
          <button type="button" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Sort</button>
    
       </div>
@@ -562,7 +562,7 @@
       const size = getScreenSize()
       switch (size) {
          case 'sm':
-            return "300px"
+            return "295px"
          case 'md':
             return "400px"
          case 'xl':
