@@ -337,27 +337,27 @@
          starBar.style.marginBottom = '-2px';
          starBar.classList.add('star-bar')
 
-         const popOver = document.createElement('div');
-         popOver.innerHTML += `
+         const repoCard = document.createElement('div');
+         repoCard.innerHTML += `
             <div class="flex items-center">
                <img class='rounded-full drop-shadow-md w-6 h-6 mr-3' style="box-shadow: rgba(240, 246, 252, 0.1) 0px 0px 0px 1px;" src="${repo.ownerAvatarUrl}">
                <a class='text-blue-400 hover:underline' href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>
             </div>
          `;
          if (repo.description) {
-            popOver.innerHTML += trimDescription(repo.description)
-            popOver.innerHTML += "<br>"
+            repoCard.innerHTML += trimDescription(repo.description)
+            repoCard.innerHTML += "<br>"
          }
 
-         popOver.innerHTML += repo.stargazersCount + " stars"
-         popOver.innerHTML += "<br>"
-         popOver.innerHTML += repo.forks + " forks"
-         popOver.innerHTML += "<br>"
-         popOver.innerHTML += repo.language
-         popOver.innerHTML += "<br>"
-         popOver.innerHTML += generateUpdatedString(repo.updatedAt)
-         popOver.style.display = 'none';
-         popOver.classList.add("p-4", "border-gray-800", "border", "rounded", "text-white", "w-96")
+         repoCard.innerHTML += repo.stargazersCount + " stars"
+         repoCard.innerHTML += "<br>"
+         repoCard.innerHTML += repo.forks + " forks"
+         repoCard.innerHTML += "<br>"
+         repoCard.innerHTML += repo.language
+         repoCard.innerHTML += "<br>"
+         repoCard.innerHTML += generateUpdatedString(repo.updatedAt)
+         repoCard.style.display = 'none';
+         repoCard.classList.add("p-4", "border-gray-800", "border", "rounded", "text-white", "w-96")
 
          const virtualSlider = document.createElement('div');
          virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-2", "w-4", "h-4")
@@ -404,7 +404,7 @@
          div.appendChild(starBar);
          div.appendChild(profile);
          div.appendChild(virtualSlider);
-         div.appendChild(popOver)
+         div.appendChild(repoCard)
 
          view.appendChild(div);
 
