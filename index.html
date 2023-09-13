@@ -135,34 +135,6 @@
 {"repoFullName": "yet-another-alex/dearpygui-examples", "stargazersCount": 13, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/95575915?v=4", "language": "Python", "description": "Python code examples on how to create several applications using Dear PyGui. Includes building and editing a table, as well as visualizing sorting algorithms in a plot.", "forks": 4, "updatedAt": "2023-09-08 10:35:29"},
 ]
    let data = originalData;
-   if (window.innerWidth <= 670) {
-      data = originalData.slice(0, 25)
-   } else if (window.innerWidth <= 1200) {
-      data = originalData.slice(0, 50)
-   }
-
-   window.addEventListener('resize', () => {
-      const previousData = data;
-      if (window.innerWidth <= 670) {
-         data = originalData.slice(0, 25)
-      } else if (window.innerWidth <= 1200) {
-         data = originalData.slice(0, 50)
-      } else {
-         data = originalData;
-      }
-      if (previousData.length !== data.length) {
-         currentPointer = null;
-         activePointer = false;
-         divs = []
-         pointers = []
-         randomize(data);
-         render();
-         selectRepository(0);
-      }
-   })
-
-   randomize(data);
-
    let mouseX = 0;
    let mouseY = 0;
 
@@ -176,7 +148,44 @@
       mouseY = clientY;
    };
 
-   render();
+
+   reset();
+   function reset() {
+      const previousData = data;
+      data = resizeDataWithWidth();
+      randomize(data);
+      render();
+      selectRepository(0);
+   }
+
+   window.addEventListener('resize', () => {
+      const previousData = data;
+      data = resizeDataWithWidth();
+      if (previousData.length !== data.length) {
+         currentPointer = null;
+         activePointer = false;
+         divs = []
+         pointers = []
+         randomize(data);
+         render();
+         selectRepository(0);
+      }
+   })
+   
+   function resizeDataWithWidth() {
+      const size = getScreenSize()
+      switch (size) {
+         case 'sm':
+            return originalData.slice(0, 25)
+            break;
+         case 'xl':
+            return originalData.slice(0, 50)
+            break;
+         case '2xl':
+            return originalData;
+            break;
+      }
+   }
 
    function render() {
       const view = document.getElementById("view");
@@ -252,7 +261,6 @@
 
          virtualSlider.addEventListener('pointerdown', (event) => {
             event.preventDefault();
-            console.log("pointerdown")
             const next = pointers.indexOf(pointer)
             selectRepository(next);
             activePointer = true;
@@ -260,7 +268,6 @@
 
          document.addEventListener('pointermove', ({clientX: x}) => {
             event.preventDefault();
-            console.log("pointermove")
             if (activePointer && !mouseIsOverCurrentPointer(x)) {
                const next = findClosestPointer(x)
                selectRepository(next);
@@ -300,7 +307,6 @@
       }
    }, wheelOpt)
 
-   selectRepository(0);
 
    function selectRepository(index) {
       if (currentPointer === index) {
@@ -371,6 +377,17 @@
       }
 
       return `Updated on ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+   }
+
+   function getScreenSize() {
+      const width = window.innerWidth;
+      if (width <= 640) {
+         return "sm";
+      } else if (width <= 1280) {
+         return "xl";
+      } else {
+         return "2xl";
+      }
    }
    </script>
 </body>
