@@ -10,27 +10,32 @@
    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 </head>
 <body class="bg-gray-950">
-   <div class="bg-gray-950 rounded-lg sm:p-6 mt-8" style="display: flex; justify-content: center; align-items: center;">
-      <div class="w-6 mr-8 hidden sm:block">
-         <div class="origin-top-left translate-y-32 -rotate-90 pr-12 whitespace-nowrap">
-            <span class="text-white">Number of stars </span>
-            <svg class="inline w-5"  fill="var(--yellow-300)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="m12.672.668 3.059 6.197 6.838.993a.75.75 0 0 1 .416 1.28l-4.948 4.823 1.168 6.812a.75.75 0 0 1-1.088.79L12 18.347l-6.116 3.216a.75.75 0 0 1-1.088-.791l1.168-6.811-4.948-4.823a.749.749 0 0 1 .416-1.279l6.838-.994L11.327.668a.75.75 0 0 1 1.345 0Z"/></svg>
-         </div>
-      </div>
 
-      <div>
-         <div>
-            <div id="view" style="display: flex; flex-direction: row; align-items: flex-end;">
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="flex flex-col items-center justify-center mt-2">
-      <button type="button" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Sort</button>
+   <div class="bg-gray-950 rounded-lg sm:p-6 mt-8 inline-flex flex-col items-stretch">
       <div id="repository-view">
 
       </div>
+      <div class="flex justify-center items-center">
+         <div class="w-6 mr-8 hidden sm:block">
+            <div class="origin-top-left translate-y-32 -rotate-90 pr-12 whitespace-nowrap">
+               <span class="text-white">Number of stars </span>
+               <svg class="inline w-5"  fill="var(--yellow-300)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="m12.672.668 3.059 6.197 6.838.993a.75.75 0 0 1 .416 1.28l-4.948 4.823 1.168 6.812a.75.75 0 0 1-1.088.79L12 18.347l-6.116 3.216a.75.75 0 0 1-1.088-.791l1.168-6.811-4.948-4.823a.749.749 0 0 1 .416-1.279l6.838-.994L11.327.668a.75.75 0 0 1 1.345 0Z"/></svg>
+            </div>
+         </div>
+   
+         <div>
+            <div>
+               <div id="view" style="display: flex; flex-direction: row; align-items: flex-end;">
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="mt-2">
+         <button type="button" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Sort</button>
+   
+      </div>
    </div>
+
    <script>
       let originalData = [
 {"repoFullName": "bingmann/sound-of-sorting", "stargazersCount": 772, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/2604907?v=4", "language": "C++", "description": "The Sound of Sorting - \"Audibilization\" and Visualization of Sorting Algorithms", "forks": 117, "updatedAt": "2023-09-12 21:29:33"},
