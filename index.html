@@ -331,9 +331,12 @@
          starBar.classList.add('star-bar')
 
          const popOver = document.createElement('div');
-         popOver.innerHTML += `<img class='rounded-full drop-shadow-md' src="${repo.ownerAvatarUrl}" width="20" height="20">`;
-         popOver.innerHTML += `<a class='text-bold' href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>`;
-         popOver.innerHTML += "<br>"
+         popOver.innerHTML += `
+            <div class="flex items-center">
+               <img class='rounded-full drop-shadow-md w-6 h-6 mr-3' style="box-shadow: rgba(240, 246, 252, 0.1) 0px 0px 0px 1px;" src="${repo.ownerAvatarUrl}">
+               <a class='text-blue-400 hover:underline' href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>
+            </div>
+         `;
          popOver.innerHTML += repo.description
          popOver.innerHTML += "<br>"
          popOver.innerHTML += repo.stargazersCount + " stars"
