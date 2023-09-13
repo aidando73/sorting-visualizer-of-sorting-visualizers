@@ -134,7 +134,7 @@
 {"repoFullName": "mrkchoi/sort-visualizer", "stargazersCount": 13, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/40152546?v=4", "language": "JavaScript", "description": "Visualizes sorting algorithms, written in JS & D3.js", "forks": 0, "updatedAt": "2022-03-30 18:01:06"},
 {"repoFullName": "yet-another-alex/dearpygui-examples", "stargazersCount": 13, "ownerAvatarUrl": "https://avatars.githubusercontent.com/u/95575915?v=4", "language": "Python", "description": "Python code examples on how to create several applications using Dear PyGui. Includes building and editing a table, as well as visualizing sorting algorithms in a plot.", "forks": 4, "updatedAt": "2023-09-08 10:35:29"},
 ]
-   let data = originalData;
+   let data = [];
    let mouseX = 0;
    let mouseY = 0;
 
@@ -153,14 +153,6 @@
    function reset() {
       const previousData = data;
       data = resizeDataWithWidth();
-      randomize(data);
-      render();
-      selectRepository(0);
-   }
-
-   window.addEventListener('resize', () => {
-      const previousData = data;
-      data = resizeDataWithWidth();
       if (previousData.length !== data.length) {
          currentPointer = null;
          activePointer = false;
@@ -170,7 +162,9 @@
          render();
          selectRepository(0);
       }
-   })
+   }
+
+   window.addEventListener('resize', reset)
    
    function resizeDataWithWidth() {
       const size = getScreenSize()
