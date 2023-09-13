@@ -274,11 +274,17 @@
          case 'sm':
             return originalData.slice(0, 25)
             break;
-         case 'xl':
+         case 'md':
+            return originalData.slice(0, 35)
+            break;
+         case 'lg':
             return originalData.slice(0, 50)
+            break; 
+         case 'xl':
+            return originalData.slice(0, 75)
             break;
          case '2xl':
-            return [...originalData];
+            return originalData.slice(0, 100);
             break;
       }
    }
@@ -479,6 +485,10 @@
       const width = window.innerWidth;
       if (width <= 640) {
          return "sm";
+      } else if (width <= 768) {
+         return "md";
+      } else if (width <= 1024) {
+         return "lg";
       } else if (width <= 1280) {
          return "xl";
       } else {
@@ -492,6 +502,8 @@
          case 'sm':
             return 75
             break;
+         case 'md':
+         case 'lg': 
          case 'xl':
             return 65
             break;
