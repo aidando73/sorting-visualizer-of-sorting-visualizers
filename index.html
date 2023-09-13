@@ -244,6 +244,8 @@
    let currentPointer = null;
    let activePointer = false;
    let minStarCount = Infinity;
+   let maxStarCount = 0;
+   const graphHeight = 500;
 
    document.onmousemove = ({ clientX, clientY }) => {
       mouseX = clientX;
@@ -255,7 +257,10 @@
       const previousData = data;
       data = resizeDataWithWidth();
       if (previousData.length !== data.length) {
+         // original data is sorted by stars, so we just need to get the first and last
+         // elements to get the min and max star counts
          minStarCount = data[data.length - 1].stargazersCount;
+         maxStarCount = data[0].stargazersCount;
          currentPointer = null;
          activePointer = false;
          divs = []
