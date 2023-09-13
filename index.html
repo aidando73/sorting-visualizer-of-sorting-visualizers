@@ -142,18 +142,19 @@
    let divs = [];
    let currentPointer = null;
    let activePointer = false;
+   let minStarCount = Infinity;
 
    document.onmousemove = ({ clientX, clientY }) => {
       mouseX = clientX;
       mouseY = clientY;
    };
 
-
    reset();
    function reset() {
       const previousData = data;
       data = resizeDataWithWidth();
       if (previousData.length !== data.length) {
+         minStarCount = data[data.length - 1].stargazersCount;
          currentPointer = null;
          activePointer = false;
          divs = []
@@ -176,7 +177,7 @@
             return originalData.slice(0, 50)
             break;
          case '2xl':
-            return originalData;
+            return [...originalData];
             break;
       }
    }
@@ -208,7 +209,7 @@
          profile.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;'
 
          const starBar = document.createElement('div');
-         starBar.style.height = `${Math.log(repo.stargazersCount)*100}px`;
+         starBar.style.height = `${Math.log(repo.stargazersCount)*100 - Math.log(minStarCount)*baseCutOff()}px`;
          starBar.style.width = '2.5px';
          starBar.style.backgroundColor = `#fde047`;
          starBar.style.borderTopLeftRadius = '1px';
@@ -288,9 +289,9 @@
 
    var supportsPassive = false;
    try {
-   window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
-      get: function () { supportsPassive = true; } 
-   }));
+      window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
+         get: function () { supportsPassive = true; } 
+      }));
    } catch(e) {}
 
    var wheelOpt = supportsPassive ? { passive: false } : false;
@@ -381,6 +382,21 @@
          return "xl";
       } else {
          return "2xl";
+      }
+   }
+
+   function baseCutOff() {
+      const size = getScreenSize()
+      switch (size) {
+         case 'sm':
+            return 75
+            break;
+         case 'xl':
+            return 65
+            break;
+         case '2xl':
+            return 35
+            break;
       }
    }
    </script>
