@@ -339,16 +339,15 @@
 
          const repoCard = document.createElement('div');
          repoCard.innerHTML += `
-            <div class="flex items-center">
+            <div class="flex items-center mb-1.5">
                <img class='rounded-full drop-shadow-md w-6 h-6 mr-3' style="box-shadow: rgba(240, 246, 252, 0.1) 0px 0px 0px 1px;" src="${repo.ownerAvatarUrl}">
-               <a class='text-blue-400 hover:underline' href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>
+               <a class='text-blue-400 hover:underline text-base' href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>
             </div>
          `;
          if (repo.description) {
             repoCard.innerHTML += trimDescription(repo.description)
             repoCard.innerHTML += "<br>"
          }
-
          repoCard.innerHTML += repo.stargazersCount + " stars"
          repoCard.innerHTML += "<br>"
          repoCard.innerHTML += repo.forks + " forks"
