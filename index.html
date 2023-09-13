@@ -245,7 +245,7 @@
    let activePointer = false;
    let minStarCount = Infinity;
    let maxStarCount = 0;
-   const graphHeight = 500;
+   const graphHeight = 350;
 
    document.onmousemove = ({ clientX, clientY }) => {
       mouseX = clientX;
@@ -321,7 +321,8 @@
          profile.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;'
 
          const starBar = document.createElement('div');
-         starBar.style.height = `${Math.log(repo.stargazersCount)*100 - Math.log(minStarCount)*baseCutOff()}px`;
+         // Get the proportion of the star count relative to the min and max star counts
+         starBar.style.height = `${getBarHeight(repo.stargazersCount)}px`;
          starBar.style.width = '2.5px';
          starBar.style.backgroundColor = `#fde047`;
          starBar.style.borderTopLeftRadius = '1px';
@@ -501,19 +502,27 @@
       }
    }
 
-   function baseCutOff() {
+   function getBarHeight(starCount) {
+      const starCountLog = Math.log(starCount);
+      const minStarCountLog = Math.log(minStarCount);
+      const maxStarCountLog = Math.log(maxStarCount);
+      const proportion = (starCountLog - minStarCountLog) / (maxStarCountLog - minStarCountLog);
+      return proportion * graphHeight + baseGraphHeight();
+   }
+
+   function baseGraphHeight() {
       const size = getScreenSize()
       switch (size) {
          case 'sm':
-            return 75
+            return 90
             break;
          case 'md':
          case 'lg': 
          case 'xl':
-            return 65
+            return 100
             break;
          case '2xl':
-            return 35
+            return 150
             break;
       }
    }
