@@ -12,7 +12,7 @@
 <body class="bg-gray-950">
 
    <div class="bg-gray-950 rounded-lg sm:p-6 mt-8 inline-flex flex-col items-stretch">
-      <div id="repository-view" class="pl-12">
+      <div id="repository-view" class="pl-12 flex justify-end">
 
       </div>
       <div class="flex justify-center items-center">
@@ -352,7 +352,7 @@
          popOver.innerHTML += "<br>"
          popOver.innerHTML += generateUpdatedString(repo.updatedAt)
          popOver.style.display = 'none';
-         popOver.classList.add("p-4", "bg-gray-900", "rounded", "text-white")
+         popOver.classList.add("p-4", "bg-gray-900", "rounded", "text-white", "w-96")
 
          const virtualSlider = document.createElement('div');
          virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-2", "w-4", "h-4")
