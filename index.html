@@ -31,7 +31,7 @@
          </div>
       </div>
       <div class="mt-8 sm:pl-12">
-         <button type="button" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Sort</button>
+         <button id="sort-button" type="button" onclick="insertionSort()" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Sort</button>
    
       </div>
    </div>
@@ -103,17 +103,17 @@
       view.replaceChildren();
       for (let i = 0; i < data.length; i++) {
          const repo = data[i];
-         const div = document.createElement('div');
-         div.style.display = 'flex';
-         div.style.flexDirection = 'column';
-         div.style.alignItems = 'center';
-         div.style.marginLeft = '-9px';
-         div.style.borderRadius = '5px';
-         div.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;';
-         div.style.backgroundColor = 'transparent';
-         div.classList.add('repo-item')
-         divs.push(div)
-         // div.href = `https://github.com/${repo.repoFullName}` 
+         const repoItem = document.createElement('div');
+         repoItem.style.display = 'flex';
+         repoItem.style.flexDirection = 'column';
+         repoItem.style.alignItems = 'center';
+         repoItem.style.marginLeft = '-9px';
+         repoItem.style.borderRadius = '5px';
+         repoItem.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;';
+         repoItem.style.backgroundColor = 'transparent';
+         repoItem.classList.add('repo-item')
+         repoItem.setAttribute('stargazers-count', repo.stargazersCount)
+         divs.push(repoItem)
 
          const profile = document.createElement('img');
          profile.src = repo.ownerAvatarUrl;
@@ -123,16 +123,17 @@
          profile.style.objectFit='cover'
          profile.style.borderRadius='50%'
          profile.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;'
+         profile.setAttribute("profile-picture", "")
 
          const starBar = document.createElement('div');
          // Get the proportion of the star count relative to the min and max star counts
          starBar.style.height = `${getBarHeight(repo.stargazersCount)}px`;
          starBar.style.width = '2.5px';
-         starBar.style.backgroundColor = `#fde047`;
          starBar.style.borderTopLeftRadius = '1px';
          starBar.style.borderTopRightRadius = '1px';
          starBar.style.marginBottom = '-2px';
-         starBar.classList.add('star-bar')
+         starBar.classList.add('star-bar', "bg-yellow-300")
+         starBar.setAttribute('star-bar', "");
 
          const repoCard = document.createElement('div');
          repoCard.innerHTML += `
@@ -169,7 +170,7 @@
          virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-3", "w-4", "h-4", "mb-8")
 
          const pointer = document.createElement('div');
-         pointer.classList.add("z-10", "invisible")
+         pointer.classList.add("z-10", "invisible", "cursor-pointer")
          pointer.innerHTML = `
             <svg height="50" viewBox="0 0 45 66" fill="none" xmlns="http://www.w3.org/2000/svg">
                <path d="M22.103 66C34.3092 66 44.2061 56.1031 44.2061 43.897C44.2061 33.0104 26.7216 6.28884 22.8453 0.433189C22.5154 -0.144127 21.6907 -0.144127 21.3608 0.433189C17.4845 6.28884 3.8147e-06 33.0104 3.8147e-06 43.897C3.8147e-06 56.1031 9.89688 66 22.103 66Z" fill="#4B5563"/>
@@ -180,7 +181,7 @@
          pointers.push(pointer)
 
          const sliderContainer = document.createElement('div');
-         sliderContainer.classList.add("relative")
+         sliderContainer.classList.add("relative", "cursor-pointer")
          const slider = document.createElement('div');
          slider.classList.add("bg-gray-800", "absolute", "-top-6", "-left-1.5", "z-0")
          slider.style.width = '13px'
@@ -222,12 +223,12 @@
             }
          })
 
-         div.appendChild(starBar);
-         div.appendChild(profile);
-         div.appendChild(virtualSlider);
-         div.appendChild(repoCard)
+         repoItem.appendChild(starBar);
+         repoItem.appendChild(profile);
+         repoItem.appendChild(virtualSlider);
+         repoItem.appendChild(repoCard)
 
-         view.appendChild(div);
+         view.appendChild(repoItem);
 
       }
    }
@@ -360,15 +361,17 @@
    }
 
    function trimDescription(description) {
+      let suffix = "...";
       if (description.length > MAX_DESCRIPTION_LENGTH) {
          description = description.substring(0, MAX_DESCRIPTION_LENGTH);
+         suffix = ""
       }
       // Continues to trim if last element is a special character
       // To prevent a hanging special character
       while (description.charCodeAt(description.length - 1) > 255) {
          description = description.substring(0, description.length - 1);
       }
-      return description + "...";
+      return description + suffix;
    }
 
    function getRepoCardWidth() {
@@ -385,6 +388,58 @@
       }
    }
 
+   async function insertionSort() {
+      let key = null;
+      for (let i = 1; i < divs.length; i++) {
+         key = divs[i];
+         const keyStarCount = parseInt(key.getAttribute("stargazers-count"));
+
+         let j = i - 1;
+         divs[i].classList.add("green")
+         while (j >= 0 && parseInt(divs[j].getAttribute("stargazers-count")) < keyStarCount) {
+            const cur = divs[j]
+            cur.classList.add("comparison")
+            const newCur = set(j + 1, cur)
+            j = j - 1;
+            await sleep(10);
+            cur.classList.remove("comparison")
+         }
+         divs[i].classList.remove("green")
+
+         await sleep(10);
+         key = set(j + 1, key)
+      }
+   }
+
+   // Returns a cloned repo item with the star bar and profile picture replaced
+   // This is to keep original referernces intact
+   function set(i, repoItem) {
+      // Clone so original element is not modified
+      const clone = divs[i].cloneNode(true)
+      const starBar = repoItem.querySelector("[star-bar]").cloneNode(true)
+      const profile = repoItem.querySelector("[profile-picture]").cloneNode(true)
+      const starBarToReplace = clone.querySelector("[star-bar]")
+      const profileToReplace = clone.querySelector("[profile-picture]")
+      starBarToReplace.replaceWith(starBar)
+      profileToReplace.replaceWith(profile)
+      clone.setAttribute("stargazers-count", repoItem.getAttribute("stargazers-count"))
+      divs[i].replaceWith(clone)
+      divs[i] = clone;
+      return divs[i];
+   }
+
+   async function highlightPOC() {
+      for (let i = 0; i < divs.length; i++) {
+         const element = divs[i];
+         element.classList.add("green")
+         await sleep(100);
+      }
+   }
+
+
+   function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+   }
    </script>
 </body>
 </html>
