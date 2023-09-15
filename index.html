@@ -371,7 +371,7 @@
          virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-3", "w-4", "h-4", "mb-9")
 
          const pointer = document.createElement('div');
-         pointer.classList.add("z-10", "hidden")
+         pointer.classList.add("z-10", "invisible")
          pointer.innerHTML = `
             <svg height="50" viewBox="0 0 45 66" fill="none" xmlns="http://www.w3.org/2000/svg">
                <path d="M22.103 66C34.3092 66 44.2061 56.1031 44.2061 43.897C44.2061 33.0104 26.7216 6.28884 22.8453 0.433189C22.5154 -0.144127 21.6907 -0.144127 21.3608 0.433189C17.4845 6.28884 3.8147e-06 33.0104 3.8147e-06 43.897C3.8147e-06 56.1031 9.89688 66 22.103 66Z" fill="#4B5563"/>
@@ -384,7 +384,18 @@
          const sliderContainer = document.createElement('div');
          sliderContainer.classList.add("relative")
          const slider = document.createElement('div');
-         slider.classList.add("w-3", "h-3", "bg-gray-500", "absolute", "-top-1", "-left-1.5", "z-0")
+         slider.classList.add("bg-gray-800", "absolute", "-top-6", "-left-1.5", "z-0")
+         slider.style.width = '13px'
+         slider.style.height = '16px'
+         // Special values for the ends
+         if (i === 0) {
+            slider.style.borderTopLeftRadius = '4px'
+            slider.style.borderBottomLeftRadius = '4px'
+            slider.style.width = '11px'
+         } else if (i === data.length - 1) {
+            slider.style.borderTopRightRadius = '4px'
+            slider.style.borderBottomRightRadius = '4px'
+         }
          sliderContainer.appendChild(slider)
 
          virtualSlider.appendChild(pointer)
@@ -444,11 +455,11 @@
          return;
       }
       if (currentPointer !== null) {
-         pointers[currentPointer].classList.add("hidden")
+         pointers[currentPointer].classList.add("invisible")
          divs[currentPointer].classList.remove("hover")
       }
       currentPointer = index;
-      pointers[currentPointer].classList.remove("hidden")
+      pointers[currentPointer].classList.remove("invisible")
       divs[currentPointer].classList.add("hover")
       const popOver = divs[currentPointer].children[3];
       const clone = popOver.cloneNode(true)
