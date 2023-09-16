@@ -72,6 +72,7 @@
       data = resizeDataWithWidth();
       if (previousData.length !== data.length) {
          reInitialize(data);
+         setSortButton();
       }
    }
 
@@ -90,7 +91,7 @@
       selectRepository(Math.trunc(divs.length/3));
    }
 
-   window.addEventListener('resize', reset)
+   window.addEventListener('resize', resizeWindow)
 
    function render() {
       const view = document.getElementById("view");
@@ -397,9 +398,7 @@
    const sortButton = document.getElementById("sort-button")
    sortButton.onclick = () => {
       if (isSorting) {
-         isSorting = false;
-         sortButton.innerText = "Sort"
-         sortButton.classList.remove("from-blue-500", "focus:ring-blue-800")
+         setSortButton();
          reset();
       } else {
          isSorting = true;
@@ -407,6 +406,12 @@
          sortButton.classList.add("from-blue-500", "focus:ring-blue-800")
          insertionSort();
       }
+   }
+
+   function setSortButton() {
+      isSorting = false;
+      sortButton.innerText = "Sort"
+      sortButton.classList.remove("from-blue-500", "focus:ring-blue-800")
    }
 
    async function insertionSort() {
