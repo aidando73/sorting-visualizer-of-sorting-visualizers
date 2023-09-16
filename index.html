@@ -31,7 +31,7 @@
          </div>
       </div>
       <div class="mt-8 sm:pl-12">
-         <button id="sort-button" type="button" onclick="insertionSort()" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Sort</button>
+         <button id="sort-button" type="button" onclick="onClickSortButton()" class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-purple-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Sort</button>
    
       </div>
    </div>
@@ -49,6 +49,7 @@
    let activePointer = false;
    let minStarCount = Infinity;
    let maxStarCount = 0;
+   let isSorting = false;
    // Heights used to calculate the height of the graph and the star bars
    const sliderContainerHeight = 60;
    const profileHeight = 17;
@@ -62,20 +63,30 @@
    function reset() {
       const previousData = data;
       data = resizeDataWithWidth();
+      reInitialize(data);
+   }
+
+   function resizeWindow() {
+      const previousData = data;
+      data = resizeDataWithWidth();
       if (previousData.length !== data.length) {
-         document.getElementById("view").style.height = `${getGraphHeight() + baseGraphHeight() + sliderContainerHeight + profileHeight}px`;
-         // original data is sorted by stars, so we just need to get the first and last
-         // elements to get the min and max star counts
-         minStarCount = data[data.length - 1].stargazersCount;
-         maxStarCount = data[0].stargazersCount;
-         currentPointer = null;
-         activePointer = false;
-         divs = []
-         pointers = []
-         randomize(data);
-         render();
-         selectRepository(Math.trunc(divs.length/2));
+         reInitialize(data);
       }
+   }
+
+   function reInitialize(data) {
+      document.getElementById("view").style.height = `${getGraphHeight() + baseGraphHeight() + sliderContainerHeight + profileHeight}px`;
+      // original data is sorted by stars, so we just need to get the first and last
+      // elements to get the min and max star counts
+      minStarCount = data[data.length - 1].stargazersCount;
+      maxStarCount = data[0].stargazersCount;
+      currentPointer = null;
+      activePointer = false;
+      divs = []
+      pointers = []
+      randomize(data);
+      render();
+      selectRepository(Math.trunc(divs.length/3));
    }
 
    window.addEventListener('resize', reset)
@@ -382,9 +393,27 @@
       }
    }
 
+   const sortButton = document.getElementById("sort-button")
+   sortButton.onclick = () => {
+      if (isSorting) {
+         isSorting = false;
+         sortButton.innerText = "Sort"
+         sortButton.classList.remove("from-blue-500", "focus:ring-blue-800")
+         reset();
+      } else {
+         isSorting = true;
+         sortButton.innerText = "Reset"
+         sortButton.classList.add("from-blue-500", "focus:ring-blue-800")
+         insertionSort();
+      }
+   }
+
    async function insertionSort() {
       let key = null;
       for (let i = 1; i < divs.length; i++) {
+         if (!isSorting) {
+            return;
+         }
          key = divs[i];
          const keyStarCount = parseInt(key.getAttribute("stargazers-count"));
 
