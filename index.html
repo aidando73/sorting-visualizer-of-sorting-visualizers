@@ -49,7 +49,9 @@
    let activePointer = false;
    let minStarCount = Infinity;
    let maxStarCount = 0;
-   const graphHeight = 350;
+   // Heights used to calculate the height of the graph and the star bars
+   const sliderContainerHeight = 60;
+   const profileHeight = 17;
 
    document.onmousemove = ({ clientX, clientY }) => {
       mouseX = clientX;
@@ -61,6 +63,7 @@
       const previousData = data;
       data = resizeDataWithWidth();
       if (previousData.length !== data.length) {
+         document.getElementById("view").style.height = `${getGraphHeight() + baseGraphHeight() + sliderContainerHeight + profileHeight}px`;
          // original data is sorted by stars, so we just need to get the first and last
          // elements to get the min and max star counts
          minStarCount = data[data.length - 1].stargazersCount;
@@ -71,32 +74,11 @@
          pointers = []
          randomize(data);
          render();
-         selectRepository(0);
+         selectRepository(Math.trunc(divs.length/2));
       }
    }
 
    window.addEventListener('resize', reset)
-   
-   function resizeDataWithWidth() {
-      const size = getScreenSize()
-      switch (size) {
-         case 'sm':
-            return originalData.slice(0, 25)
-            break;
-         case 'md':
-            return originalData.slice(0, 35)
-            break;
-         case 'lg':
-            return originalData.slice(0, 50)
-            break; 
-         case 'xl':
-            return originalData.slice(0, 75)
-            break;
-         case '2xl':
-            return originalData.slice(0, 100);
-            break;
-      }
-   }
 
    function render() {
       const view = document.getElementById("view");
@@ -165,11 +147,14 @@
          repoCard.style.display = 'none';
          repoCard.classList.add("p-4", "border-gray-800", "border", "rounded", "text-white")
          repoCard.style.width = getRepoCardWidth();
+         repoCard.setAttribute("repo-card", "")
 
          const virtualSlider = document.createElement('div');
          virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-3", "w-4", "h-4", "mb-8")
+         virtualSlider.setAttribute("virtual-slider", "")
 
          const pointer = document.createElement('div');
+         pointer.setAttribute("pointer", "")
          pointer.classList.add("z-10", "invisible", "cursor-pointer")
          pointer.innerHTML = `
             <svg height="50" viewBox="0 0 45 66" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -199,29 +184,8 @@
 
          virtualSlider.appendChild(pointer)
          virtualSlider.appendChild(sliderContainer)
+         addVirtualSliderEventListener(virtualSlider)
 
-         virtualSlider.addEventListener('pointerdown', (event) => {
-            event.preventDefault();
-            const next = pointers.indexOf(pointer)
-            selectRepository(next);
-            activePointer = true;
-         })
-
-         document.addEventListener('pointermove', ({clientX: x}) => {
-            event.preventDefault();
-            if (activePointer && !mouseIsOverCurrentPointer(x)) {
-               const next = findClosestPointer(x)
-               selectRepository(next);
-            }
-         })
-
-
-         document.addEventListener('pointerup', (event) => {
-            event.preventDefault();
-            if (activePointer) {
-               activePointer = false;
-            }
-         })
 
          repoItem.appendChild(starBar);
          repoItem.appendChild(profile);
@@ -232,6 +196,35 @@
 
       }
    }
+
+
+   document.addEventListener('pointermove', ({clientX: x}) => {
+      event.preventDefault();
+      if (activePointer && !mouseIsOverCurrentPointer(x)) {
+         const next = findClosestPointer(x)
+         selectRepository(next);
+      }
+   })
+
+
+   document.addEventListener('pointerup', (event) => {
+      event.preventDefault();
+      if (activePointer) {
+         activePointer = false;
+      }
+   })
+
+   function addVirtualSliderEventListener(virtualSlider) {
+      virtualSlider.addEventListener('pointerdown', (event) => {
+         event.preventDefault();
+         const pointer = virtualSlider.querySelector("[pointer]")
+         const next = pointers.indexOf(pointer)
+         console.log(next)
+         selectRepository(next);
+         activePointer = true;
+      })
+   }
+
 
    var supportsPassive = false;
    try {
@@ -250,9 +243,9 @@
 
 
    function selectRepository(index) {
-      if (currentPointer === index) {
-         return;
-      }
+      // if (currentPointer === index) {
+      //    return;
+      // }
       if (currentPointer !== null) {
          pointers[currentPointer].classList.add("invisible")
          divs[currentPointer].classList.remove("hover")
@@ -260,8 +253,9 @@
       currentPointer = index;
       pointers[currentPointer].classList.remove("invisible")
       divs[currentPointer].classList.add("hover")
-      const popOver = divs[currentPointer].children[3];
-      const clone = popOver.cloneNode(true)
+      const repoCard = divs[currentPointer].querySelector("[repo-card]");
+      const clone = repoCard.cloneNode(true)
+      console.log(clone)
       clone.style.display = 'block';
       document.getElementById("repository-view").replaceChildren(clone)
    }
@@ -340,7 +334,7 @@
       const minStarCountLog = Math.log(minStarCount);
       const maxStarCountLog = Math.log(maxStarCount);
       const proportion = (starCountLog - minStarCountLog) / (maxStarCountLog - minStarCountLog);
-      return proportion * graphHeight + baseGraphHeight();
+      return proportion * getGraphHeight() + baseGraphHeight();
    }
 
    function baseGraphHeight() {
@@ -406,7 +400,7 @@
          }
          divs[i].classList.remove("green")
 
-         await sleep(10);
+         await sleep(getClockSpeed());
          key = set(j + 1, key)
       }
    }
@@ -418,27 +412,77 @@
       const clone = divs[i].cloneNode(true)
       const starBar = repoItem.querySelector("[star-bar]").cloneNode(true)
       const profile = repoItem.querySelector("[profile-picture]").cloneNode(true)
+      const repoCard = repoItem.querySelector("[repo-card]").cloneNode(true)
       const starBarToReplace = clone.querySelector("[star-bar]")
       const profileToReplace = clone.querySelector("[profile-picture]")
+      const repoCardToReplace = clone.querySelector("[repo-card]")
       starBarToReplace.replaceWith(starBar)
       profileToReplace.replaceWith(profile)
+      repoCardToReplace.replaceWith(repoCard)
       clone.setAttribute("stargazers-count", repoItem.getAttribute("stargazers-count"))
+      addVirtualSliderEventListener(clone.querySelector("[virtual-slider]"))
+      pointers[i] = clone.querySelector("[pointer]")
       divs[i].replaceWith(clone)
       divs[i] = clone;
+      if (currentPointer === i) {
+         selectRepository(i);
+      }
       return divs[i];
    }
 
-   async function highlightPOC() {
-      for (let i = 0; i < divs.length; i++) {
-         const element = divs[i];
-         element.classList.add("green")
-         await sleep(100);
+   function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+   }
+      
+   function resizeDataWithWidth() {
+      const size = getScreenSize()
+      switch (size) {
+         case 'sm':
+            return originalData.slice(0, 25)
+            break;
+         case 'md':
+            return originalData.slice(0, 35)
+            break;
+         case 'lg':
+            return originalData.slice(0, 50)
+            break; 
+         case 'xl':
+            return originalData.slice(0, 75)
+            break;
+         case '2xl':
+            return originalData.slice(0, 100);
+            break;
       }
    }
 
+   function getGraphHeight() {
+      const size = getScreenSize()
+      switch(size) {
+         case 'sm':
+            return 250
+            break;
+         case 'md':
+         case 'lg':
+         case 'xl':
+         case '2xl':
+            return 350
+            break;
+      }
+   }
 
-   function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
+   function getClockSpeed() {
+      const size = getScreenSize()
+      switch(size) {
+         case 'sm':
+            return 100
+            break;
+         case 'md':
+         case 'lg':
+         case 'xl':
+         case '2xl':
+            return 5
+            break;
+      }
    }
    </script>
 </body>
