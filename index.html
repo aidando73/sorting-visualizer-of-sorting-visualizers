@@ -395,7 +395,7 @@
             cur.classList.add("comparison")
             const newCur = set(j + 1, cur)
             j = j - 1;
-            await sleep(10);
+            await sleep(getClockSpeed());
             cur.classList.remove("comparison")
          }
          divs[i].classList.remove("green")
@@ -474,7 +474,7 @@
       const size = getScreenSize()
       switch(size) {
          case 'sm':
-            return 100
+            return 25
             break;
          case 'md':
          case 'lg':
