@@ -139,6 +139,7 @@
          starBar.setAttribute('star-bar', "");
 
          const repoCard = document.createElement('div');
+         repoCard.classList.add("p-4", "border-gray-800", "border", "rounded", "text-white")
          repoCard.innerHTML += `
             <div class="flex items-center mb-1.5">
                <img class='rounded-full drop-shadow-md w-6 h-6 mr-3' style="box-shadow: rgba(240, 246, 252, 0.1) 0px 0px 0px 1px;" src="${repo.ownerAvatarUrl}">
@@ -166,7 +167,6 @@
             </div>
          `
          repoCard.style.display = 'none';
-         repoCard.classList.add("p-4", "border-gray-800", "border", "rounded", "text-white")
          repoCard.style.width = getRepoCardWidth();
          repoCard.setAttribute("repo-card", "")
 
@@ -395,10 +395,11 @@
          case 'sm':
             return "295px"
          case 'md':
-            return "400px"
+            return "425px"
+         case 'lg':
+            return "571px"
          case 'xl':
          case '2xl':
-         case 'lg':
             return "500px"
       }
    }
