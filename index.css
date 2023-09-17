@@ -3,6 +3,7 @@
    --star-yellow: #facc15;
    --red-600: rgb(220 38 38);
    --sorting-green: rgb(34 197 94);
+   font-family: 'Lato', sans-serif;
 }
 
 .repo-item.hover .star-bar {
