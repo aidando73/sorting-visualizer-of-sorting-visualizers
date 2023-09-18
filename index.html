@@ -4,15 +4,29 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Sorting Visualizer of Sorting Visualizer</title>
-   <link rel="graph icon" type="image/png" href="favicon.png"/>
+   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico">
+   <link rel="icon" href="/icon.svg" type="image/svg+xml">
+   <link rel="manifest" href="/site.webmanifest">
    <link rel="stylesheet" href="index.css">
    <script src="https://cdn.tailwindcss.com"></script>
    <script src="language-colors.js"></script>
    <script src="original-data.js"></script>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-950 flex justify-center">
 
    <div class="bg-gray-950 rounded-lg sm:p-6 mt-8 inline-flex flex-col items-stretch">
+      <div class="sm:pl-12 mb-8">
+         <div class="inline-flex flex-col items-stretch">
+            <h1 class="inline text-white leading-6 sm:leading-6 sm:text-lg mb-2.5 sm:mb-3 mr-5">
+               Sorting Visualizer<br>of Sorting Visualizers
+            </h1>
+            <div class="header-border mb-4"></div>
+         </div>
+      </div>
       <div id="repository-view" class="sm:pl-12 pr-0.5 mb-2 flex justify-start lg:justify-end h-52 items-start break-all sm:break-normal">
 
       </div>
@@ -368,10 +382,10 @@
    }
 
    function trimDescription(description) {
-      let suffix = "...";
+      let suffix = ""
       if (description.length > MAX_DESCRIPTION_LENGTH) {
          description = description.substring(0, MAX_DESCRIPTION_LENGTH);
-         suffix = ""
+         suffix = "..."
       }
       // Continues to trim if last element is a special character
       // To prevent a hanging special character
@@ -424,7 +438,7 @@
          const keyStarCount = parseInt(key.getAttribute("stargazers-count"));
 
          let j = i - 1;
-         divs[i].classList.add("green")
+         divs[i].classList.add("anchor")
          while (j >= 0 && parseInt(divs[j].getAttribute("stargazers-count")) < keyStarCount) {
             const cur = divs[j]
             cur.classList.add("comparison")
@@ -433,7 +447,7 @@
             await sleep(getClockSpeed());
             cur.classList.remove("comparison")
          }
-         divs[i].classList.remove("green")
+         divs[i].classList.remove("anchor")
 
          await sleep(getClockSpeed());
          key = set(j + 1, key)
