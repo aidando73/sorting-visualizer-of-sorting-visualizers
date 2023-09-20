@@ -462,16 +462,16 @@
          const keyStarCount = parseInt(key.getAttribute("stargazers-count"));
 
          let j = i - 1;
-         divs[i].classList.add("anchor")
+         const unhighlightAnchor = highlight('anchor', i)
          while (j >= 0 && parseInt(divs[j].getAttribute("stargazers-count")) < keyStarCount) {
             const cur = divs[j]
-            cur.classList.add("comparison")
+            const unhighlightComparison = highlight('comparison', j)
             const newCur = set(j + 1, cur)
             j = j - 1;
             await sleep(getClockSpeed());
-            cur.classList.remove("comparison")
+            unhighlightComparison();
          }
-         divs[i].classList.remove("anchor")
+         unhighlightAnchor();
 
          await sleep(getClockSpeed());
          key = set(j + 1, key)
@@ -497,7 +497,7 @@
       }
       const leftSize = mid - left + 1;
       const rightSize = right - mid;
-      divs[mid].classList.add("anchor")
+      const unhighlightAnchor = highlight('anchor', mid)
       const leftArr = [];
       const rightArr = [];
       for (let i = 0; i < leftSize; i++) {
@@ -516,41 +516,40 @@
          const leftStarCount = parseInt(leftArr[i].getAttribute("stargazers-count"));
          const rightStarCount = parseInt(rightArr[j].getAttribute("stargazers-count"));
          if (leftStarCount >= rightStarCount) {
-            const newLeft = set(k, leftArr[i]);
-            newLeft.classList.add("comparison")
+            set(k, leftArr[i]);
             i++;
          } else {
-            const newRight = set(k, rightArr[j]);
-            newRight.classList.add("comparison")
+            set(k, rightArr[j]);
             j++;
          }
-         k++;
+         const unhighlight = highlight('comparison', k);
          await sleep(getClockSpeed());
-         divs[k - 1].classList.remove("comparison")
+         unhighlight();
+         k++;
       }
       while (i < leftSize) {
          if (!isSorting) {
             return;
          }
          const newLeft = set(k, leftArr[i]);
-         newLeft.classList.add("comparison")
+         const unhighlight = highlight('comparison', k);
          i++;
          k++;
          await sleep(getClockSpeed());
-         newLeft.classList.remove("comparison")
+         unhighlight();
       }
       while (j < rightSize) {
          if (!isSorting) {
             return;
          }
          const newRight = set(k, rightArr[j]);
-         newRight.classList.add("comparison")
+         const unhighlight = highlight('comparison', k);
          j++;
          k++;
          await sleep(getClockSpeed());
-         newRight.classList.remove("comparison")
+         unhighlight();
       }
-      divs[mid].classList.remove("anchor")
+      unhighlightAnchor();
    }
 
    async function quickSort() {
