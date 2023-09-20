@@ -48,12 +48,13 @@
       </div>
       <div class="mt-2 mb-10 sm:pl-12 grid justify-items-start items-end" style="grid-template-columns: min-content min-content">
          <button id="sort-button" type="button" onclick="onClickSortButton()" class="inline mr-4 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-purple-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sort</button>
-         <div class="w-40">
+         <div class="w-36">
             <label for="algorithm" class="block mb-1.5 text-sm font-medium text-white invisible" hidden>Choose an algorithm</label>
             <select id="algorithms" class="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500">
                <option value="insertion-sort">Insertion Sort</option>
                <option value="merge-sort">Merge Sort</option>
                <option value="quick-sort">Quick Sort</option>
+               <option value="heap-sort">Heap Sort</option>
             </select>
          </div>
 
@@ -442,6 +443,9 @@
             case "quick-sort":
                quickSort();
                break;
+            case "heap-sort":
+               heapSort();
+               break;
          }
       }
    }
@@ -585,6 +589,47 @@
       return i + 1;
    }
 
+   async function heapSort() {
+      const N = divs.length;
+      for (let i = Math.floor(N / 2) - 1; i >= 0; i--) {
+         await heapify(N, i);
+      }
+
+      for (let i = N - 1; i > 0; i--) {
+         if (!isSorting) {
+            return;
+         }
+         await swap(0, i);
+         await heapify(i, 0);
+      }
+   }
+
+   async function heapify(N, i) {
+      const left = 2 * i + 1;
+      const right = 2 * i + 2;
+      let smallest = i;
+      const unhighlight = highlight('anchor', i)
+
+      if (left < N && starCount(left) < starCount(smallest)) {
+         smallest = left;
+      }
+
+      if (right < N && starCount(right) < starCount(smallest)) {
+         smallest = right;
+      }
+
+      if (smallest !== i) {
+         await swap(i, smallest);
+         await sleep(getClockSpeed());
+         await heapify(N, smallest);
+      }
+      unhighlight();
+   }
+
+   function starCount(i) {
+      return parseInt(divs[i].getAttribute("stargazers-count"));
+   }
+
    async function swap(i, j) {
       const temp = divs[i];
       const a = set(i, divs[j]);
@@ -688,7 +733,6 @@
             // Remove highlight from all elements with the same repo name
             // Could be multiple as we clone elements
             document.querySelectorAll(`[repo-name='${repoName}']`).forEach(element => {
-               console.log(element);
                element.classList.remove(clazz)
             })
          })
