@@ -53,6 +53,7 @@
             <select id="algorithms" class="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500">
                <option value="insertion-sort">Insertion Sort</option>
                <option value="merge-sort">Merge Sort</option>
+               <option value="quick-sort">Quick Sort</option>
             </select>
          </div>
 
@@ -128,7 +129,9 @@
          repoItem.style.borderRadius = '5px';
          repoItem.style.boxShadow = 'rgba(31, 35, 40, 0.15) 0px 0px 0px 1px;';
          repoItem.style.backgroundColor = 'transparent';
+         repoItem.setAttribute("repo-name", repo.repoFullName);
          repoItem.classList.add('repo-item')
+
          repoItem.setAttribute('stargazers-count', repo.stargazersCount)
          divs.push(repoItem)
 
@@ -436,6 +439,9 @@
             case "merge-sort":
                mergeSort();
                break;
+            case "quick-sort":
+               quickSort();
+               break;
          }
       }
    }
@@ -547,6 +553,48 @@
       divs[mid].classList.remove("anchor")
    }
 
+   async function quickSort() {
+      await quickSortHelper(0, divs.length - 1);
+   }
+
+   async function quickSortHelper(left, right) {
+      if (left < right) {
+         const pivot = await partition(left, right);
+         await quickSortHelper(left, pivot - 1);
+         await quickSortHelper(pivot + 1, right);
+      }
+   }
+
+   async function partition(left, right) {
+      const pivot = divs[right];
+      const anchorUnhighlight = highlight('anchor', right)
+      let i = left - 1;
+      for (let j = left; j < right; j++) {
+         if (!isSorting) {
+            return;
+         }
+         const cur = divs[j];
+         const curStarCount = parseInt(cur.getAttribute("stargazers-count"));
+         const pivotStarCount = parseInt(pivot.getAttribute("stargazers-count"));
+         if (curStarCount >= pivotStarCount) {
+            i++;
+            await swap(i, j);
+         }
+      }
+      await swap(i + 1, right)
+      anchorUnhighlight();
+      return i + 1;
+   }
+
+   async function swap(i, j) {
+      const temp = divs[i];
+      const a = set(i, divs[j]);
+      const b = set(j, temp);
+      const unhighlight = highlight('comparison', i, j);
+      await sleep(getClockSpeed())
+      unhighlight();
+   }
+   
    // Returns a cloned repo item with the star bar and profile picture replaced
    // This is to keep original referernces intact
    function set(i, repoItem) {
@@ -626,6 +674,28 @@
             break;
       }
    }
+
+   // Highlights elements at the given indices
+   // Returns a function to remove the highlight
+   function highlight(clazz, ...indices) {
+      let repoNames = []
+      for (let i = 0; i < indices.length; i++) {
+         const element = divs[indices[i]];
+         element.classList.add(clazz)
+         repoNames.push(element.getAttribute("repo-name"))
+      }
+      return () => {
+         repoNames.forEach(repoName => {
+            // Remove highlight from all elements with the same repo name
+            // Could be multiple as we clone elements
+            document.querySelectorAll(`[repo-name='${repoName}']`).forEach(element => {
+               console.log(element);
+               element.classList.remove(clazz)
+            })
+         })
+      }
+   }
+
    </script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
 </body>
