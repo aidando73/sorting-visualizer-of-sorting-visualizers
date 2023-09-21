@@ -12,14 +12,14 @@
    <script src="https://cdn.tailwindcss.com"></script>
    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
    <script src="language-colors.js"></script>
-   <script src="original-data.js"></script>
+   <script src="load-data.js"></script>
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-950 flex justify-center">
 
-   <div class="bg-gray-950 rounded-lg sm:p-6 mt-8 inline-flex flex-col items-stretch">
+   <div id="main-content" class="bg-gray-950 rounded-lg sm:p-6 mt-8 inline-flex flex-col items-stretch hidden">
       <div class="sm:pl-12 mb-8">
          <div class="inline-flex flex-col items-stretch">
             <h1 class="inline text-white leading-6 sm:leading-6 sm:text-lg mb-2.5 sm:mb-3 mr-5">
@@ -68,6 +68,7 @@
    <script>
    const MAX_DESCRIPTION_LENGTH = 100;
 
+   let originalData = null;
    let data = [];
    let mouseX = 0;
    let mouseY = 0;
@@ -88,7 +89,14 @@
       mouseY = clientY;
    };
 
-   reset();
+   fetch("https://aidand-public-assets.s3.ap-southeast-2.amazonaws.com/sorting-visualizer-of-sorting-visualizers/data.json")
+      .then(response => response.json())
+      .then(data => {
+         originalData = data;
+         reset();
+         document.getElementById('main-content').classList.remove('hidden')
+      });
+
    function reset() {
       const previousData = data;
       data = resizeDataWithWidth();
