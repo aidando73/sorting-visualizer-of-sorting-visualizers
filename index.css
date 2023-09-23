@@ -1,4 +1,18 @@
-   :root {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+   .sort-button {
+      @apply from-purple-600 focus:ring-purple-700
+   }
+
+   .sort-button.reset {
+      @apply from-blue-500 to-blue-500 focus:ring-blue-800
+   }
+}
+
+:root {
    --blue-300: rgb(147 197 253);
    --blue-400: rgb(96 165 250);
    --blue-500: rgb(59 130 246);

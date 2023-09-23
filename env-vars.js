@@ -1,0 +1,1 @@
+const DATA_URL = "https://aidand-public-assets.s3.ap-southeast-2.amazonaws.com/sorting-visualizer-of-sorting-visualizers/data.json";

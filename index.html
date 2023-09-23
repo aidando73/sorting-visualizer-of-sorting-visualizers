@@ -8,11 +8,10 @@
    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=16">
    <link rel="icon" href="/icon.svg?v=10" type="image/svg+xml">
    <link rel="manifest" href="/site.webmanifest">
-   <link rel="stylesheet" href="index.css">
-   <script src="https://cdn.tailwindcss.com"></script>
-   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
+   <link rel="stylesheet" href="dist/output.css">
    <script src="language-colors.js"></script>
    <script src="load-data.js"></script>
+   <script src="env-vars.js"></script>
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
@@ -47,7 +46,7 @@
          </div>
       </div>
       <div class="mt-2 mb-24 sm:pl-12 grid justify-items-start items-end" style="grid-template-columns: min-content min-content">
-         <button id="sort-button" type="button" onclick="onClickSortButton()" class="inline mr-4 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-purple-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sort</button>
+         <button id="sort-button" type="button" onclick="onClickSortButton()" class="sort-button inline mr-4 text-white bg-gradient-to-br to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sort</button>
          <div class="w-36">
             <label for="algorithm" class="block mb-1.5 text-sm font-medium text-white invisible" hidden>Choose an algorithm</label>
             <select id="algorithms" class="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500">
@@ -89,7 +88,7 @@
       mouseY = clientY;
    };
 
-   fetch("https://aidand-public-assets.s3.ap-southeast-2.amazonaws.com/sorting-visualizer-of-sorting-visualizers/data.json")
+   fetch(DATA_URL)
       .then(response => response.json())
       .then(data => {
          originalData = data;
@@ -294,9 +293,6 @@
 
 
    function selectRepository(index) {
-      // if (currentPointer === index) {
-      //    return;
-      // }
       if (currentPointer !== null) {
          pointers[currentPointer].classList.add("invisible")
          divs[currentPointer].classList.remove("hover")
@@ -440,10 +436,11 @@
          setSortButton();
          reset();
          algorithms.classList.remove("invisible")
+         sortButton.classList.remove("reset")
       } else {
          isSorting = true;
          sortButton.innerText = "Reset"
-         sortButton.classList.add("from-blue-500", "focus:ring-blue-800")
+         sortButton.classList.add("reset")
          algorithms.classList.add("invisible")
          switch (algorithms.value) {
             case "insertion-sort":
@@ -752,6 +749,6 @@
    }
 
    </script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+   <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
 </body>
 </html>

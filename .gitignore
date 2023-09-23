@@ -4,3 +4,4 @@ venv/
 python/
 code.zip
 dependencies.zip
+dist/
