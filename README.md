@@ -4,4 +4,4 @@ The top sorting visualizer projects on GitHub, sorted and visualized.
 
 ![Basic Demo](basic-demo.gif)
 
-Play around at sort.aidando.com
+Visit [sort.aidando.com](sort.aidando.com) for the full app.
