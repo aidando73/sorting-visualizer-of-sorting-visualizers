@@ -1,5 +1,5 @@
 <div align="center">
-  <h1 align="center">Sorting Visualizer of Sorting Visualizers</h1>
+  <h4 align="center">Sorting Visualizer of Sorting Visualizers</h1>
   <p>
     The top sorting visualizer projects on GitHub, sorted and visualized.
     <br />
