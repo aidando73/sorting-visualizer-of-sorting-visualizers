@@ -20,5 +20,3 @@ For all sorting algorithms, perform the following steps:
    - Should be reset
 - Sort and move slider
    - Selected repo should change
-- Sort, reset and then sort to completion
-   - Should be correct
