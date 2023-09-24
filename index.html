@@ -615,6 +615,9 @@
    }
 
    async function heapify(N, i) {
+      if (!isSorting) {
+         return;
+      }
       const left = 2 * i + 1;
       const right = 2 * i + 2;
       let smallest = i;
