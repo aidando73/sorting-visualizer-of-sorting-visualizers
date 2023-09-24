@@ -576,6 +576,9 @@
    }
 
    async function partition(left, right) {
+      if (!isSorting) {
+         return;
+      }
       const pivot = divs[right];
       const anchorUnhighlight = highlight('anchor', right)
       let i = left - 1;
