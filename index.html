@@ -15,22 +15,23 @@
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-950 flex justify-center">
-   <div id="main-content" class="bg-gray-950 rounded-lg sm:p-6 mt-8 inline-flex flex-col items-stretch hidden">
-      <div class="sm:pl-12 mb-8">
+<body class="flex justify-center bg-gray-950 dark">
+   
+   <div id="main-content" class="inline-flex flex-col items-stretch hidden mt-8 rounded-lg bg-gray-950 sm:p-6">
+      <div class="mb-8 sm:pl-12">
          <div class="inline-flex flex-col items-stretch">
             <h1 class="inline text-white leading-6 sm:leading-6 sm:text-lg mb-2.5 sm:mb-3 mr-5">
                Sorting Visualizer<br>of Sorting Visualizers
             </h1>
-            <div class="header-border mb-4"></div>
+            <div class="mb-4 header-border"></div>
          </div>
       </div>
       <div id="repository-view" class="sm:pl-12 pr-0.5 mb-2 flex justify-start lg:justify-end h-52 items-start break-all sm:break-normal">
 
       </div>
-      <div class="flex justify-center items-center">
-         <div class="w-6 mr-8 hidden sm:block">
-            <div class="origin-top-left translate-y-32 -rotate-90 pr-12 whitespace-nowrap">
+      <div class="flex items-center justify-center">
+         <div class="hidden w-6 mr-8 sm:block">
+            <div class="pr-12 origin-top-left -rotate-90 translate-y-32 whitespace-nowrap">
                <span class="text-gray-50">Number of stars </span>
                <svg class="inline w-5"  fill="var(--yellow-300)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="m12.672.668 3.059 6.197 6.838.993a.75.75 0 0 1 .416 1.28l-4.948 4.823 1.168 6.812a.75.75 0 0 1-1.088.79L12 18.347l-6.116 3.216a.75.75 0 0 1-1.088-.791l1.168-6.811-4.948-4.823a.749.749 0 0 1 .416-1.279l6.838-.994L11.327.668a.75.75 0 0 1 1.345 0Z"/></svg>
             </div>
@@ -43,7 +44,7 @@
             </div>
          </div>
       </div>
-      <div class="mt-2 mb-24 sm:pl-12 grid justify-items-start items-end" style="grid-template-columns: min-content min-content">
+      <div class="grid items-end mt-2 mb-24 sm:pl-12 justify-items-start" style="grid-template-columns: min-content min-content">
          <button id="sort-button" type="button" onclick="onClickSortButton()" class="sort-button inline mr-4 text-white bg-gradient-to-br to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sort</button>
          <div class="w-36">
             <label for="algorithm" class="block mb-1.5 text-sm font-medium text-white invisible" hidden>Choose an algorithm</label>
@@ -55,12 +56,22 @@
             </select>
          </div>
       </div>
-      <div class="text-gray-100 flex sm:pl-12 justify-start lg:justify-end mb-10 text-sm">
+      <div class="flex justify-start mb-10 text-sm text-gray-100 sm:pl-12 lg:justify-end">
          <span>
             Project by <a class="underline" href="https://www.linkedin.com/in/aidando">Aidan Do</a>
          </span>
       </div>
    </div>
+
+
+   <div id="spinner" role="status">
+      <svg aria-hidden="true" class="inline w-10 h-screen mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-purple-500" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+         <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+     </svg>
+     <span class="sr-only">Loading...</span>
+   </div>
+
 
    <script>
    const MAX_DESCRIPTION_LENGTH = 100;
@@ -91,6 +102,7 @@
       .then(data => {
          originalData = data;
          reset();
+         document.getElementById('spinner').classList.add('hidden')
          document.getElementById('main-content').classList.remove('hidden')
       });
 
@@ -168,8 +180,8 @@
          const repoCard = document.createElement('div');
          repoCard.innerHTML += `
             <div class="flex items-center mb-1.5">
-               <img class='rounded-full drop-shadow-md w-6 h-6 mr-3' style="box-shadow: rgba(240, 246, 252, 0.1) 0px 0px 0px 1px;" src="${repo.ownerAvatarUrl}">
-               <a class='text-blue-400 hover:underline text-base' href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>
+               <img class='w-6 h-6 mr-3 rounded-full drop-shadow-md' style="box-shadow: rgba(240, 246, 252, 0.1) 0px 0px 0px 1px;" src="${repo.ownerAvatarUrl}">
+               <a class='text-base text-blue-400 hover:underline' href="https://github.com/${repo.repoFullName}">${repo.repoFullName}</a>
             </div>
          `;
          if (repo.description) {
@@ -177,17 +189,17 @@
          }
          repoCard.innerHTML += `
             <div class="flex flex-wrap">
-               <div class="flex items-center text-sm mr-2">
+               <div class="flex items-center mr-2 text-sm">
                   <div class="w-2.5 h-2.5 inline-block rounded-full mr-1.5" style="background-color: ${getGithubLanguageColor(repo.language)};"></div>
                   <div class="text-gray-400 whitespace-nowrap">${repo.language}</div>
                </div>
                <div class="mr-2 text-sm text-gray-400">·</div>
-               <div class="flex items-center text-sm mr-2">
-                  <svg class="text-gray-400 align-center inline-block mr-1" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path></svg>
+               <div class="flex items-center mr-2 text-sm">
+                  <svg class="inline-block mr-1 text-gray-400 align-center" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Zm0 2.445L6.615 5.5a.75.75 0 0 1-.564.41l-3.097.45 2.24 2.184a.75.75 0 0 1 .216.664l-.528 3.084 2.769-1.456a.75.75 0 0 1 .698 0l2.77 1.456-.53-3.084a.75.75 0 0 1 .216-.664l2.24-2.183-3.096-.45a.75.75 0 0 1-.564-.41L8 2.694Z"></path></svg>
                   <span class="text-gray-400 align-bottom whitespace-nowrap">${repo.stargazersCount}</span>
                </div>
                <div class="mr-2 text-sm text-gray-400">·</div>
-               <div class="text-gray-400 text-sm whitespace-nowrap">
+               <div class="text-sm text-gray-400 whitespace-nowrap">
                   ${generateUpdatedString(repo.updatedAt)}
                </div>
             </div>
