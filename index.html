@@ -11,6 +11,7 @@
    <link rel="stylesheet" href="output.css">
    <script src="language-colors.js"></script>
    <script src="env-vars.js"></script>
+   <script src="linear-gradient.js"></script>
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
@@ -499,10 +500,12 @@
          await sleep(getClockSpeed());
          key = set(j + 1, key)
       }
+      await flare();
    }
 
    async function mergeSort() {
       await mergeSortHelper(0, divs.length - 1);
+      await flare();
    }
 
    async function mergeSortHelper(left, right) {
@@ -577,6 +580,7 @@
 
    async function quickSort() {
       await quickSortHelper(0, divs.length - 1);
+      await flare();
    }
 
    async function quickSortHelper(left, right) {
@@ -624,6 +628,7 @@
          await swap(0, i);
          await heapify(i, 0);
       }
+      await flare();
    }
 
    async function heapify(N, i) {
@@ -761,6 +766,24 @@
                element.classList.remove(clazz)
             })
          })
+      }
+   } 
+
+   /**
+    * Highlights the full graph with the gradient motif
+    */
+   const FLARE_START = "#9333ea";
+   const FLARE_END = "#93c5fd";
+   async function flare() {
+      for (let i = 0; i < divs.length; i++) {
+         const color = lerp(FLARE_START, FLARE_END, i / divs.length);
+         divs[i].querySelector("[star-bar]").style.backgroundColor = color;
+         await sleep(getClockSpeed()*1.5)
+      }
+
+      await sleep(getClockSpeed()*2)
+      for (let i =0; i < divs.length; i++) {
+         divs[i].querySelector("[star-bar]").style.backgroundColor = null;
       }
    }
 
