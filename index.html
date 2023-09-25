@@ -775,6 +775,9 @@
    const FLARE_START = "#cd94ff";
    const FLARE_END = "#93c5fd";
    async function flare() {
+      if (!isSorting) {
+         return;
+      }
       for (let i = 0; i < divs.length; i++) {
          const color = lerp(FLARE_START, FLARE_END, i / divs.length);
          divs[i].querySelector("[star-bar]").style.backgroundColor = color;
