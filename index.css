@@ -4,7 +4,7 @@
 
 @layer components {
    .sort-button {
-      @apply from-purple-600 focus:ring-purple-700
+      @apply from-purple-600 focus:ring-purple-950
    }
 
    .sort-button.reset {

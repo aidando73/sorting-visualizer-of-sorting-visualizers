@@ -1030,7 +1030,7 @@ input:checked + .toggle-bg {
 
 .sort-button:focus {
   --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(108 43 217 / var(--tw-ring-opacity));
+  --tw-ring-color: rgb(59 7 100 / var(--tw-ring-opacity));
 }
 
 .sort-button.reset {
@@ -1269,32 +1269,20 @@ input:checked + .toggle-bg {
   height: 1.5rem;
 }
 
-.h-8 {
-  height: 2rem;
-}
-
 .h-9 {
   height: 2.25rem;
-}
-
-.h-64 {
-  height: 16rem;
-}
-
-.h-full {
-  height: 100%;
 }
 
 .h-screen {
   height: 100vh;
 }
 
-.h-10 {
-  height: 2.5rem;
-}
-
 .w-1\/2 {
   width: 50%;
+}
+
+.w-10 {
+  width: 2.5rem;
 }
 
 .w-2 {
@@ -1325,16 +1313,8 @@ input:checked + .toggle-bg {
   width: 16rem;
 }
 
-.w-8 {
-  width: 2rem;
-}
-
 .w-full {
   width: 100%;
-}
-
-.w-10 {
-  width: 2.5rem;
 }
 
 .flex-1 {
@@ -1618,14 +1598,6 @@ input:checked + .toggle-bg {
 
 .to-blue-500 {
   --tw-gradient-to: #3F83F8 var(--tw-gradient-to-position);
-}
-
-.fill-blue-600 {
-  fill: #1C64F2;
-}
-
-.fill-purple-600 {
-  fill: #7E3AF2;
 }
 
 .fill-purple-500 {
