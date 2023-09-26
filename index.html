@@ -12,6 +12,7 @@
    <script src="language-colors.js"></script>
    <script src="env-vars.js"></script>
    <script src="linear-gradient.js"></script>
+   <script src="beep.js"></script>
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
@@ -45,17 +46,23 @@
             </div>
          </div>
       </div>
-      <div class="grid items-end mt-2 mb-24 sm:pl-12 justify-items-start" style="grid-template-columns: min-content min-content">
-         <button id="sort-button" type="button" onclick="onClickSortButton()" class="sort-button inline mr-4 text-white bg-gradient-to-br to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sort</button>
-         <div class="w-36">
-            <label for="algorithm" class="block mb-1.5 text-sm font-medium text-white invisible" hidden>Choose an algorithm</label>
-            <select id="algorithms" class="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500">
-               <option value="insertion-sort">Insertion Sort</option>
-               <option value="merge-sort">Merge Sort</option>
-               <option value="quick-sort">Quick Sort</option>
-               <option value="heap-sort">Heap Sort</option>
-            </select>
+      <div class="grid flex-wrap items-end max-w-full mt-2 mb-24 sm:pl-12 justify-items-start button-grid">
+         <div class="flex items-end">
+            <button id="sort-button" type="button" onclick="onClickSortButton()" class="sort-button inline mr-4 text-white bg-gradient-to-br to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center">Sort</button>
+            <div class="mr-4 w-36">
+               <label for="algorithm" class="block mb-1.5 text-sm font-medium text-white invisible" hidden>Choose an algorithm</label>
+               <select id="algorithms" class="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500">
+                  <option value="insertion-sort">Insertion Sort</option>
+                  <option value="merge-sort">Merge Sort</option>
+                  <option value="quick-sort">Quick Sort</option>
+                  <option value="heap-sort">Heap Sort</option>
+               </select>
+            </div>
          </div>
+         <button id="mute-button" type="button" class="w-26 mt-5 text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800 inline-flex items-center">
+            Mute
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="ml-2" viewBox="0 0 16 16" width="16" height="16"><path d="M7.563 2.069A.75.75 0 0 1 8 2.75v10.5a.751.751 0 0 1-1.238.57L3.472 11H1.75A1.75 1.75 0 0 1 0 9.25v-2.5C0 5.784.784 5 1.75 5h1.723l3.289-2.82a.75.75 0 0 1 .801-.111ZM6.5 4.38 4.238 6.319a.748.748 0 0 1-.488.181h-2a.25.25 0 0 0-.25.25v2.5c0 .138.112.25.25.25h2c.179 0 .352.064.488.18L6.5 11.62Zm6.096-2.038a.75.75 0 0 1 1.06 0 8 8 0 0 1 0 11.314.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042 6.5 6.5 0 0 0 0-9.193.75.75 0 0 1 0-1.06Zm-1.06 2.121-.001.001a5 5 0 0 1 0 7.07.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734 3.5 3.5 0 0 0 0-4.95.75.75 0 1 1 1.061-1.061Z"></path></svg>
+         </button>
       </div>
       <div class="flex justify-start mb-10 text-sm text-gray-100 sm:pl-12 lg:justify-end">
          <span>
@@ -72,7 +79,6 @@
      </svg>
      <span class="sr-only">Loading...</span>
    </div>
-
 
    <script>
    const MAX_DESCRIPTION_LENGTH = 100;
@@ -280,7 +286,6 @@
          event.preventDefault();
          const pointer = virtualSlider.querySelector("[pointer]")
          const next = pointers.indexOf(pointer)
-         console.log(next)
          selectRepository(next);
          activePointer = true;
       })
@@ -313,7 +318,6 @@
       divs[currentPointer].classList.add("hover")
       const repoCard = divs[currentPointer].querySelector("[repo-card]");
       const clone = repoCard.cloneNode(true)
-      console.log(clone)
       clone.style.display = 'block';
       document.getElementById("repository-view").replaceChildren(clone)
    }
@@ -492,6 +496,7 @@
             const unhighlightComparison = highlight('comparison', j)
             const newCur = set(j + 1, cur)
             j = j - 1;
+            beepByStarCount(cur.getAttribute('stargazers-count'))
             await sleep(getClockSpeed());
             unhighlightComparison();
          }
@@ -549,6 +554,7 @@
             j++;
          }
          const unhighlight = highlight('comparison', k);
+         beepByStarCount(Math.max(leftStarCount, rightStarCount))
          await sleep(getClockSpeed());
          unhighlight();
          k++;
@@ -561,6 +567,7 @@
          const unhighlight = highlight('comparison', k);
          i++;
          k++;
+         beepByStarCount(leftArr[i-1].getAttribute('stargazers-count'))
          await sleep(getClockSpeed());
          unhighlight();
       }
@@ -572,6 +579,7 @@
          const unhighlight = highlight('comparison', k);
          j++;
          k++;
+         beepByStarCount(rightArr[j-1].getAttribute('stargazers-count'))
          await sleep(getClockSpeed());
          unhighlight();
       }
@@ -665,6 +673,7 @@
       const a = set(i, divs[j]);
       const b = set(j, temp);
       const unhighlight = highlight('comparison', i, j);
+      beepByStarCount(divs[i].getAttribute('stargazers-count'))
       await sleep(getClockSpeed())
       unhighlight();
    }
@@ -775,12 +784,13 @@
    const FLARE_START = "#cd94ff";
    const FLARE_END = "#93c5fd";
    async function flare() {
-      if (!isSorting) {
-         return;
-      }
       for (let i = 0; i < divs.length; i++) {
+         if (!isSorting) {
+            return;
+         }
          const color = lerp(FLARE_START, FLARE_END, i / divs.length);
          divs[i].querySelector("[star-bar]").style.backgroundColor = color;
+         beepByStarCount(divs[i].getAttribute('stargazers-count'));
          await sleep(getClockSpeed()*1.5)
       }
 
@@ -790,6 +800,20 @@
       }
    }
 
+   const muteButton = document.getElementById("mute-button")
+   const muteOriginalHtml = muteButton.innerHTML;
+   muteButton.onclick = () => {
+      if (isMuted()) {
+         unmuteBeeps();
+         muteButton.innerHTML = muteOriginalHtml;
+      } else {
+         muteBeeps();
+         muteButton.innerHTML = `
+            Unmute
+            <svg class="ml-1.5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" width="16" height="16"><path d="M8 2.75v10.5a.751.751 0 0 1-1.238.57L3.473 11H1.75A1.75 1.75 0 0 1 0 9.25v-2.5C0 5.784.784 5 1.75 5h1.722l3.29-2.82A.75.75 0 0 1 8 2.75Zm3.28 2.47L13 6.94l1.72-1.72a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L14.06 8l1.72 1.72a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L13 9.06l-1.72 1.72a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734L11.94 8l-1.72-1.72a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215Zm-7.042 1.1a.752.752 0 0 1-.488.18h-2a.25.25 0 0 0-.25.25v2.5c0 .138.112.25.25.25h2c.179 0 .352.064.488.18L6.5 11.62V4.38Z"></path></svg>
+         `
+      }
+   }
    </script>
 </body>
 </html>
