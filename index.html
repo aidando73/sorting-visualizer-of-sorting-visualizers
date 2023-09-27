@@ -265,15 +265,13 @@
       }
    }
 
-
    document.addEventListener('pointermove', ({clientX: x}) => {
       event.preventDefault();
       if (activePointer && !mouseIsOverCurrentPointer(x)) {
          const next = findClosestPointer(x)
          selectRepository(next);
       }
-   })
-
+   });
 
    document.addEventListener('pointerup', (event) => {
       event.preventDefault();
@@ -283,13 +281,15 @@
    })
 
    function addVirtualSliderEventListener(virtualSlider) {
-      virtualSlider.addEventListener('pointerdown', (event) => {
+      const handler = (event) => {
          event.preventDefault();
          const pointer = virtualSlider.querySelector("[pointer]")
          const next = pointers.indexOf(pointer)
          selectRepository(next);
          activePointer = true;
-      })
+      }
+      virtualSlider.addEventListener('pointerdown', handler)
+      virtualSlider.addEventListener('touchstart', handler)
    }
 
 
