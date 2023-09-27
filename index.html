@@ -56,6 +56,7 @@
                   <option value="merge-sort">Merge Sort</option>
                   <option value="quick-sort">Quick Sort</option>
                   <option value="heap-sort">Heap Sort</option>
+                  <option value="bogo-sort">Bogo Sort</option>
                </select>
             </div>
          </div>
@@ -470,6 +471,9 @@
             case "heap-sort":
                heapSort();
                break;
+            case "bogo-sort":
+               bogoSort();
+               break;
          }
       }
    }
@@ -662,6 +666,35 @@
          await heapify(N, smallest);
       }
       unhighlight();
+   }
+
+   async function bogoSort() {
+      const N = divs.length;
+      while (!isSorted()) {
+         if (!isSorting) {
+            return;
+         }
+         await randomize(divs);
+      }
+      await flare();
+
+      async function randomize(arr) {
+         for (let i = 0; i < arr.length; i++) {
+            if (!isSorting) {
+               return;
+            }
+            const j = Math.floor(Math.random() * arr.length);
+            await swap(i, j);
+         }
+      }
+      function isSorted() {
+         for (let i = 0; i < N - 1; i++) {
+            if (starCount(i) < starCount(i + 1)) {
+               return false;
+            }
+         }
+         return true;
+      }
    }
 
    function starCount(i) {
