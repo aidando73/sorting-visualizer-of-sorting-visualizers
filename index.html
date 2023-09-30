@@ -884,7 +884,7 @@
    const muteButton = document.getElementById("mute-button")
    const muteOriginalHtml = muteButton.innerHTML;
    muteButton.onclick = () => {
-      if (isMuted()) {
+      if (isMuted) {
          unmuteBeeps();
          muteButton.innerHTML = muteOriginalHtml;
       } else {

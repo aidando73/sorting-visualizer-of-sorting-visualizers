@@ -1,5 +1,6 @@
 var audioCtx = new (window.AudioContext || window.webkitAudioContext || window.audioContext);
 const DEFAULT_VOLUME = 0.5;
+var isMuted = false;
 
 function beepByStarCount(starCount) {
    const rank = Math.log(starCount - minStarCount) / Math.log(maxStarCount - minStarCount);
@@ -55,14 +56,12 @@ function beep(rank) {
    oscillator.stop(audioCtx.currentTime + attack + decay + release);
 }
 
-function isMuted() {
-   return primaryGainControl.gain.value == 0;
-}
-
 function muteBeeps() {
+   isMuted = true;
    primaryGainControl.gain.setValueAtTime(0, audioCtx.currentTime);
 }
 
 function unmuteBeeps() {
+   isMuted = false;
    primaryGainControl.gain.setValueAtTime(DEFAULT_VOLUME, audioCtx.currentTime);
 }
