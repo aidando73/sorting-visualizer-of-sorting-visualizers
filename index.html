@@ -500,8 +500,6 @@
       if (isSorting) {
          setSortButton();
          reset();
-         algorithms.classList.remove("invisible")
-         sortButton.classList.remove("reset")
       } else {
          isSorting = true;
          sortButton.innerText = "Reset"
@@ -530,7 +528,8 @@
    function setSortButton() {
       isSorting = false;
       sortButton.innerText = "Sort"
-      sortButton.classList.remove("from-blue-500", "focus:ring-blue-800")
+      sortButton.classList.remove("from-blue-500", "focus:ring-blue-800", "reset")
+      algorithms.classList.remove("invisible")
    }
 
    async function insertionSort() {
