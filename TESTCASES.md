@@ -18,5 +18,6 @@ For all sorting algorithms, perform the following steps:
    - Sort button should be purple, reset button should be blue.
 - Sort and reset before completion
    - Should be reset
-- Sort and move slider
+- Sort and move slider, click mute and unmute
    - Selected repo should change
+   - Sound should be muted and unmuted
