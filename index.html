@@ -218,7 +218,7 @@
          repoCard.setAttribute("repo-card", "")
 
          const virtualSlider = document.createElement('div');
-         virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-3", "w-4", "h-4", "mb-8")
+         virtualSlider.classList.add("flex", "flex-col", "items-center", "mt-3", "w-4", "h-4", "mb-8", "virtual-slider")
          virtualSlider.setAttribute("virtual-slider", "")
 
          const pointer = document.createElement('div');
@@ -226,17 +226,18 @@
          pointer.classList.add("z-10", "invisible", "cursor-pointer")
          pointer.innerHTML = `
             <svg height="50" viewBox="0 0 45 66" fill="none" xmlns="http://www.w3.org/2000/svg">
-               <path d="M22.103 66C34.3092 66 44.2061 56.1031 44.2061 43.897C44.2061 33.0104 26.7216 6.28884 22.8453 0.433189C22.5154 -0.144127 21.6907 -0.144127 21.3608 0.433189C17.4845 6.28884 3.8147e-06 33.0104 3.8147e-06 43.897C3.8147e-06 56.1031 9.89688 66 22.103 66Z" fill="#4B5563"/>
+               <path d="M22.103 66C34.3092 66 44.2061 56.1031 44.2061 43.897C44.2061 33.0104 26.7216 6.28884 22.8453 0.433189C22.5154 -0.144127 21.6907 -0.144127 21.3608 0.433189C17.4845 6.28884 3.8147e-06 33.0104 3.8147e-06 43.897C3.8147e-06 56.1031 9.89688 66 22.103 66Z" fill="currentColor"/>
                <path d="M26.5145 56.6389V53.2512C26.5587 52.6885 26.4828 52.1226 26.2916 51.5914C26.1005 51.0603 25.7986 50.5758 25.4061 50.1705C29.1087 49.7574 33 48.3527 33 41.908C32.9996 40.26 32.3664 38.6752 31.2312 37.4816C31.7687 36.0398 31.7307 34.4461 31.1251 33.0316C31.1251 33.0316 29.7336 32.6185 26.5145 34.7786C23.8118 34.0453 20.9629 34.0453 18.2602 34.7786C15.0411 32.6185 13.6496 33.0316 13.6496 33.0316C13.044 34.4461 13.006 36.0398 13.5435 37.4816C12.3999 38.684 11.7659 40.2831 11.7747 41.9434C11.7747 48.3409 15.666 49.7456 19.3686 50.2059C18.9807 50.6072 18.6815 51.0858 18.4905 51.6104C18.2996 52.1351 18.2211 52.6942 18.2602 53.2512V56.6389" fill="white"/>
                <path d="M26.5145 56.6389V53.2512C26.5587 52.6885 26.4828 52.1226 26.2916 51.5914C26.1005 51.0603 25.7986 50.5758 25.4061 50.1705C29.1087 49.7574 33 48.3527 33 41.908C32.9996 40.26 32.3664 38.6752 31.2312 37.4816C31.7687 36.0398 31.7307 34.4461 31.1251 33.0316C31.1251 33.0316 29.7336 32.6185 26.5145 34.7786C23.8118 34.0453 20.9629 34.0453 18.2602 34.7786C15.0411 32.6185 13.6496 33.0316 13.6496 33.0316C13.044 34.4461 13.006 36.0398 13.5435 37.4816C12.3999 38.684 11.7659 40.2831 11.7747 41.9434C11.7747 48.3409 15.666 49.7456 19.3686 50.2059C18.9807 50.6072 18.6815 51.0858 18.4905 51.6104C18.2996 52.1351 18.2211 52.6942 18.2602 53.2512V56.6389" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                <path d="M18.2346 54.2925C14.7055 55.4427 11.7646 54.2925 10 50.7471" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>`;
          pointers.push(pointer)
 
-         const sliderContainer = document.createElement('div');
-         sliderContainer.classList.add("relative", "cursor-pointer")
+         const sliderBox = document.createElement('div');
+         sliderBox.classList.add("relative", "cursor-pointer")
          const slider = document.createElement('div');
-         slider.classList.add("bg-gray-800", "absolute", "-top-6", "-left-1.5", "z-0")
+         slider.classList.add("absolute", "-top-6", "-left-1.5", "z-0", "slider")
+         slider.setAttribute("slider", "")
          slider.style.width = '13px'
          slider.style.height = '16px'
          // Special values for the ends
@@ -248,10 +249,10 @@
             slider.style.borderTopRightRadius = '4px'
             slider.style.borderBottomRightRadius = '4px'
          }
-         sliderContainer.appendChild(slider)
+         sliderBox.appendChild(slider)
 
          virtualSlider.appendChild(pointer)
-         virtualSlider.appendChild(sliderContainer)
+         virtualSlider.appendChild(sliderBox)
          addVirtualSliderEventListener(virtualSlider)
 
 
@@ -277,9 +278,11 @@
       event.preventDefault();
       if (activePointer) {
          activePointer = false;
+         removeSliderClass("active");
       }
    })
 
+   let virtualSliderHovered = false;
    function addVirtualSliderEventListener(virtualSlider) {
       const handler = (event) => {
          event.preventDefault();
@@ -287,11 +290,55 @@
          const next = pointers.indexOf(pointer)
          selectRepository(next);
          activePointer = true;
+         applySliderClass("active");
       }
       virtualSlider.addEventListener('pointerdown', handler)
       virtualSlider.addEventListener('touchstart', handler)
+
+      // Hover styling
+      virtualSlider.addEventListener('pointerenter', hoverSlider);
+      virtualSlider.addEventListener('pointerleave', unHoverSlider);
    }
 
+   function hoverSlider(event) {
+      event.target.setAttribute("hover", "");
+      applySliderClass("hovered");
+   }
+
+   function unHoverSlider(event) {
+      event.target.removeAttribute("hover");
+      setTimeout(() => {
+         const virtualSliderOnHover = document.querySelector("[virtual-slider][hover]");
+         if (!virtualSliderOnHover) {
+            removeSliderClass("hovered");
+         }
+      }, 0);
+   }
+
+   function applySliderClass(clazz) {
+      for (let i=0; i<divs.length; i++) {
+         const slider = divs[i].querySelector("[slider]");
+         if (slider.classList.contains(clazz)) {
+            break;
+         }
+         slider.classList.add(clazz);
+         const pointer = divs[i].querySelector("[pointer]:not(.invisible)")
+         if (pointer) {
+            pointer.classList.add(clazz);
+         }
+      }
+   }
+
+   function removeSliderClass(clazz) {
+      for (let i=0; i<divs.length; i++) {
+         const slider = divs[i].querySelector("[slider]")
+         slider.classList.remove(clazz);
+         const pointer = divs[i].querySelector("[pointer]:not(.invisible)")
+         if (pointer) {
+            pointer.classList.remove(clazz)
+         }
+      }
+   }
 
    var supportsPassive = false;
    try {

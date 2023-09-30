@@ -10,6 +10,30 @@
    .sort-button.reset {
       @apply from-blue-500 to-blue-500 focus:ring-blue-800
    }
+
+   [virtual-slider] .slider {
+      @apply bg-gray-800
+   }
+
+   [virtual-slider] .slider.hovered {
+      background-color: #1c2431;
+   }
+
+   [virtual-slider] .slider.active {
+      background-color: #232e3e
+   }
+
+   [virtual-slider] [pointer] {
+      @apply text-gray-600
+   }
+
+   [virtual-slider] [pointer]:hover:not(.active) {
+      color: #424b57;
+   }
+
+   [virtual-slider] [pointer].active {
+      color: #4d5766;
+   }
 }
 
 :root {
