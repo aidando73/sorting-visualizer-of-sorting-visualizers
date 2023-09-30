@@ -148,7 +148,7 @@
 
    function render() {
       const view = document.getElementById("view");
-      view.replaceChildren();
+      view.innerHTML = '';
       for (let i = 0; i < data.length; i++) {
          const repo = data[i];
          const repoItem = document.createElement('div');
@@ -367,7 +367,9 @@
       const repoCard = divs[currentPointer].querySelector("[repo-card]");
       const clone = repoCard.cloneNode(true)
       clone.style.display = 'block';
-      document.getElementById("repository-view").replaceChildren(clone)
+      const repoView = document.getElementById("repository-view");
+      repoView.innerHTML = '';
+      repoView.appendChild(clone)
    }
 
    function randomize(arr) {
